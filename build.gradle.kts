@@ -36,9 +36,7 @@ dependencies {
     implementation("org.springframework.security:spring-security-rsocket")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 
-    // https://mvnrepository.com/artifact/com.google.apis/google-api-services-oauth2
     implementation("com.google.apis:google-api-services-oauth2:v2-rev157-1.25.0")
-
     implementation("com.google.api-client:google-api-client")
 
 }
