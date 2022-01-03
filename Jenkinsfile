@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'gradle bootJar'
+                sh 'gradle test bootJar'
                 archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
             }
         }
