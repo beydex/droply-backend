@@ -1,8 +1,25 @@
 spring:
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: 560884241902-p1atlsdr1i1sc79icipgbled726ek470.apps.googleusercontent.com
-            client-secret: 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
+  application:
+    name: Droply
+  datasource:
+    url: "jdbc:postgresql://localhost/droply"
+    username: "postgres"
+    password: "12345"
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 16
+      auto-commit: false
+      connection-timeout: 10000
+      idle-timeout: 60000
+      minimum-idle: 2
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate.format_sql: true
+      hibernate.jdbc.lob.non_contextual_creation: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    neo4j:
+      open-in-view: false
