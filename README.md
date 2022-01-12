@@ -1,11 +1,11 @@
 # Droply Backend
 
-A repository for Droply backend
+Репозиторий бекенда проекта Droply
 
-## Stack
+## Стек технологий
 
-Initially, it was agreed to stick with these technologies:
+Для разработки используются следующие технологии:
 
-- Kotlin
-- Spring
-- RSocket
+- Kotlin (основной ЯП)
+- Spring (&Boot) IoC, Data
+- Ktor (транспорт WebSocket)
