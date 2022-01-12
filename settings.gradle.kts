@@ -1,1 +1,1 @@
-rootProject.name = "experiment"
+rootProject.name = "Droply"

@@ -8,9 +8,14 @@ class MemoryContext : Context {
         return map[key]
     }
 
-    override fun set(key: String, value: Any) {
+    override fun set(key: String, value: Any?) {
         if (key == "auth" && value is Auth) {
             auth = value
+            return
+        }
+
+        if (value == null) {
+            map.remove(key)
             return
         }
 

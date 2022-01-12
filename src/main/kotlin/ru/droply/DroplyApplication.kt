@@ -5,13 +5,14 @@ import io.ktor.server.netty.*
 import org.springframework.boot.Banner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import ru.droply.plugins.configureSockets
+import ru.droply.feature.ktor.configureSockets
 
 @SpringBootApplication
 class DroplyApplication
 
 fun main(args: Array<String>) {
-    println("""
+    println(
+        """
         
             ___                     _        
            /   \ _ __  ___   _ __  | | _   _ 
@@ -19,8 +20,11 @@ fun main(args: Array<String>) {
          / /_// | |  | (_) || |_) || || |_| |
         /___,'  |_|   \___/ | .__/ |_| \__, |
                             |_|        |___/ 
+        Beydex Team    :::::: Running backend
+        https://beydex.atlassian.net/
 
-    """.trimIndent())
+    """.trimIndent()
+    )
 
     runApplication<DroplyApplication>(*args) {
         setBannerMode(Banner.Mode.OFF)

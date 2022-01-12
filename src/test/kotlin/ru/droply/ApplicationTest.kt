@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.dao.UserDao
 import ru.droply.entity.DroplyUser
+import ru.droply.test.DroplyTest
 import kotlin.test.assertEquals
 
 class ApplicationTest: DroplyTest() {

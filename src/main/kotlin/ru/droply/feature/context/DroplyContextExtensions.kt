@@ -1,7 +1,4 @@
-package ru.droply.feature.ext
-
-import ru.droply.feature.context.Context
-
+package ru.droply.feature.context
 
 inline fun <reified T : Any> Context.retCreate(key: String, supply: () -> T): T {
     var result = ret<T>(key)

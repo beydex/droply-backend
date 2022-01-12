@@ -16,6 +16,10 @@ import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.transaction.jta.JtaTransactionManager
+import ru.droply.feature.context.ConnectionPool
+import ru.droply.feature.scene.MemorySceneManager
+import ru.droply.feature.scene.SceneManager
+import ru.droply.test.SingletonConnectionPool
 import javax.sql.DataSource
 
 @Profile("test")
@@ -23,12 +27,22 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = ["ru.droply.dao"])
 @EntityScan("ru.droply.entity")
-class EmbeddedConfig(
+class DroplyTestConfig(
     dataSource: DataSource,
     properties: JpaProperties,
     jtaTransactionManager: ObjectProvider<JtaTransactionManager>
 ) :
     JpaBaseConfiguration(dataSource, properties, jtaTransactionManager) {
+
+    @Bean
+    fun connectionPool(): ConnectionPool {
+        return SingletonConnectionPool()
+    }
+
+    @Bean
+    fun sceneManager(): SceneManager {
+        return MemorySceneManager()
+    }
 
     @Configuration
     internal class DataSourceConfig {
@@ -57,7 +71,7 @@ class EmbeddedConfig(
 
     override fun getVendorProperties(): Map<String, Any>? {
         val jpaProperties: MutableMap<String, Any> = HashMap()
-        jpaProperties["hibernate.hbm2ddl.auto"] = "create"
+        jpaProperties["hibernate.hbm2ddl.auto"] = "update"
         jpaProperties["hibernate.physical_naming_strategy"] = SpringPhysicalNamingStrategy::class.java
         jpaProperties["hibernate.dialect"] = "org.hibernate.dialect.PostgreSQL92Dialect"
         return jpaProperties

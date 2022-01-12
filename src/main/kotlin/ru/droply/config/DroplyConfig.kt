@@ -1,13 +1,14 @@
 package ru.droply.config
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import ru.droply.feature.context.ConnectionPool
 import ru.droply.feature.context.MemoryConnectionPool
-import ru.droply.feature.subrouting.MemorySceneManager
-import ru.droply.feature.subrouting.SceneManager
+import ru.droply.feature.scene.MemorySceneManager
+import ru.droply.feature.scene.SceneManager
 
+@Profile("!test")
 @Configuration
 class DroplyConfig {
     @Bean
@@ -18,10 +19,5 @@ class DroplyConfig {
     @Bean
     fun sceneManager(): SceneManager {
         return MemorySceneManager()
-    }
-
-    @Bean
-    fun objectMapper(): ObjectMapper {
-        return ObjectMapper()
     }
 }
