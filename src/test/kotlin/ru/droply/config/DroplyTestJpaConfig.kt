@@ -16,10 +16,6 @@ import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.transaction.jta.JtaTransactionManager
-import ru.droply.feature.context.ConnectionPool
-import ru.droply.feature.scene.MemorySceneManager
-import ru.droply.feature.scene.SceneManager
-import ru.droply.test.SingletonConnectionPool
 import javax.sql.DataSource
 
 @Profile("test")
@@ -27,22 +23,11 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = ["ru.droply.dao"])
 @EntityScan("ru.droply.entity")
-class DroplyTestConfig(
+class DroplyTestJpaConfig(
     dataSource: DataSource,
     properties: JpaProperties,
     jtaTransactionManager: ObjectProvider<JtaTransactionManager>
-) :
-    JpaBaseConfiguration(dataSource, properties, jtaTransactionManager) {
-
-    @Bean
-    fun connectionPool(): ConnectionPool {
-        return SingletonConnectionPool()
-    }
-
-    @Bean
-    fun sceneManager(): SceneManager {
-        return MemorySceneManager()
-    }
+) : JpaBaseConfiguration(dataSource, properties, jtaTransactionManager) {
 
     @Configuration
     internal class DataSourceConfig {

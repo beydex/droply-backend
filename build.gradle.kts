@@ -11,6 +11,7 @@ plugins {
     kotlin("plugin.serialization") version "1.6.10"
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
+    kotlin("kapt") version "1.3.72"
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
 }
@@ -23,8 +24,11 @@ application {
 
 repositories {
     mavenCentral()
+    google()
 }
 
+// For JPA compatibility with Kotlin
+// https://habr.com/ru/company/haulmont/blog/572574/
 allOpen {
     annotation("javax.persistence.Entity")
     annotation("javax.persistence.MappedSuperclass")
@@ -32,25 +36,45 @@ allOpen {
 }
 
 dependencies {
+    // Ktor
     implementation("io.ktor:ktor-websockets:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+    // DB stuff (with Spring Data & PostgreSQL)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    runtimeOnly("org.postgresql:postgresql")
+
+    // Google Auth
+    implementation("com.google.api-client:google-api-client:1.33.0")
+
+    // Kotlin deps
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.2")
 
-    runtimeOnly("org.postgresql:postgresql")
+    // Logging
+    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+
+    // MapStruct
+    implementation("org.mapstruct:mapstruct:1.5.0.Beta2")
+    kapt("org.mapstruct:mapstruct-processor:1.5.0.Beta2")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    // Embedded Postgres for tests
     testImplementation("com.opentable.components:otj-pg-embedded:0.13.4")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.withType<KotlinCompile> {
@@ -64,28 +88,41 @@ tasks {
     bootRun {
         doFirst {
             if (System.getProperty("droply.localRun") == "true") {
-                logger.warn("Running locally, including test configurations")
+                systemProperties["spring.profiles.active"] = System.getProperty("spring.profiles.active")
+                systemProperties["droply.localRun"] = "true"
+
                 classpath = sourceSets.test.get().runtimeClasspath
             }
         }
     }
 }
 
+/**
+ * Task for running Droply backend locally.
+ * Automatically enables 'test' profile.
+ *
+ * Thus, embedded postgres will be in use
+ * and other test beans will be there.
+ */
+@Suppress("LeakingThis")
 abstract class RunLocally : DefaultTask() {
     @get:Input
     abstract val profiles: ListProperty<String>
 
     init {
         profiles.convention(listOf("test"))
-        setFinalizedBy(setOf("bootRun"))
+        setDependsOn(listOf("testClasses"))
+        setFinalizedBy(listOf("bootRun"))
     }
 }
 
 tasks.register<RunLocally>("runLocally") {
-    profiles.set(listOf("test"))
     doFirst {
-        System.setProperty("spring.profiles.active", profiles.get().joinToString(" "))
+        val profilesEnabledInfo = profiles.get().joinToString(" ")
+        logger.error(profilesEnabledInfo)
         System.setProperty("droply.localRun", "true")
-        logger.warn("You are running a dev environment, profiles: ${profiles.get().joinToString(" ")}")
+        System.setProperty("spring.profiles.active", profilesEnabledInfo)
+
+        logger.warn("You are running a dev environment, profiles: $profilesEnabledInfo")
     }
 }

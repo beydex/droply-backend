@@ -14,8 +14,4 @@ class MemoryConnectionPool : ConnectionPool {
         } else found
 
     }
-
-    override fun plusAssign(connection: DefaultWebSocketSession) {
-        map[connection] = MemoryContext()
-    }
 }

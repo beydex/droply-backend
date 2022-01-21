@@ -1,4 +1,4 @@
-package ru.droply.entity
+package ru.droply.entity.base
 
 import org.springframework.data.util.ProxyUtils
 import java.io.Serializable

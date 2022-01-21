@@ -10,14 +10,10 @@ import ru.droply.feature.scene.SceneManager
 
 @Profile("!test")
 @Configuration
-class DroplyConfig {
+class DroplyPartsConfig {
     @Bean
-    fun connectionPool(): ConnectionPool {
-        return MemoryConnectionPool()
-    }
+    fun connectionPool(): ConnectionPool = MemoryConnectionPool()
 
     @Bean
-    fun sceneManager(): SceneManager {
-        return MemorySceneManager()
-    }
+    fun sceneManager(): SceneManager = MemorySceneManager()
 }

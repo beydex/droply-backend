@@ -10,11 +10,19 @@ import ru.droply.feature.scene.Scene
 import ru.droply.feature.scene.SceneManager
 import ru.droply.feature.scene.SceneRequest
 import ru.droply.feature.spring.autowired
-import ru.droply.scene.HelloScene
-import ru.droply.scene.WorldScene
+import ru.droply.scene.auth.GoogleAuthScene
+import ru.droply.scene.auth.WhoamiScene
+import ru.droply.scene.test.HelloScene
+import ru.droply.scene.test.WorldScene
 import java.time.Duration
 
 private val sceneManager: SceneManager by autowired()
+
+
+private val helloScene: HelloScene by autowired()
+private val worldScene: WorldScene by autowired()
+private val authScene: GoogleAuthScene by autowired()
+private val whoamiScene: WhoamiScene by autowired()
 
 fun Application.configureSockets() {
     install(WebSockets) {
@@ -25,8 +33,10 @@ fun Application.configureSockets() {
     }
 
     sceneManager.apply {
-        set("hello", HelloScene())
-        set("world", WorldScene())
+        set("hello", helloScene)
+        set("world", worldScene)
+        set("auth/google", authScene)
+        set("whoami", whoamiScene)
     }
 
     routing {
@@ -38,12 +48,15 @@ fun Application.configureSockets() {
                     val scene: Scene<Any>? = sceneManager[sceneRequest.path]
                     val requestContent = sceneRequest.request
 
+                    // TODO: process middleware
+
                     scene?.run {
                         rollout(Json.decodeFromString(serializer, requestContent.toString()))
                     } ?: throw IllegalStateException("No such route")
 
                 } catch (e: Exception) {
                     outgoing.sendJson("Something went wrong: " + e.message)
+                    e.printStackTrace()
                 }
             }
         }

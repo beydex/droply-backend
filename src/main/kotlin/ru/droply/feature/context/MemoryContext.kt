@@ -1,8 +1,10 @@
 package ru.droply.feature.context
 
-class MemoryContext : Context {
-    private val map: MutableMap<String, Any> = HashMap()
-    private var auth: Auth? = null
+import ru.droply.feature.context.auth.Auth
+
+open class MemoryContext : Context {
+    override var auth: Auth? = null
+    val map: MutableMap<String, Any> = HashMap()
 
     override fun get(key: String): Any? {
         return map[key]
@@ -27,7 +29,7 @@ class MemoryContext : Context {
         return (map[key] ?: return null) as? T
     }
 
-    override fun auth(): Auth? {
-        return auth
+    override fun toString(): String {
+        return "MemoryContext(map=$map, auth=$auth)"
     }
 }

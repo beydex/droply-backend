@@ -10,6 +10,12 @@ pipeline {
     }
 
     stages {
+        stage('Log configuration') {
+            steps {
+                echo 'GRADLE_EXEC =' + GRADLE_EXEC
+                sh 'java -version'
+            }
+        }
         stage('Build') {
             steps {
                 sh '${GRADLE_EXEC} clean build bootJar'

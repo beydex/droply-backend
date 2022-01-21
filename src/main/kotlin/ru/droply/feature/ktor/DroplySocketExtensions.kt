@@ -30,7 +30,7 @@ suspend fun ReceiveChannel<Frame>.retrieveText(action: suspend Frame.Text.() -> 
     }
 }
 
-val DefaultWebSocketSession.pool: ConnectionPool by autowired()
+var connectionPool: ConnectionPool by autowired()
 
 val DefaultWebSocketSession.ctx: Context
-    get() = pool[this]
+    get() = connectionPool[this]

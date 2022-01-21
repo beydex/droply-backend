@@ -23,3 +23,11 @@ spring:
   data:
     neo4j:
       open-in-view: false
+
+droply:
+  ktor:
+    host: "0.0.0.0"
+    port: 8081
+  auth:
+    google:
+      clientId: "560884241902-p1atlsdr1i1sc79icipgbled726ek470.apps.googleusercontent.com"
