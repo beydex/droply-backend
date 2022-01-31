@@ -11,36 +11,24 @@ pipeline {
     stage('Environment') {
       steps {
         script {
-          WORKSPACE_OUT = sh(script: 'ls -a', returnStdout: true)
-          GRADLE_VERSION_OUT = sh(script: 'chmod +x gradlew && ./gradlew --version', returnStdout: true)
-          JAVA_VERSION_OUT = sh(script: 'java -version', returnStdout: true)
-          OPENSSL_VERSION_OUT = sh(script: 'openssl version', returnStdout: true)
-
-          echo "Workspace setup"
-          echo "${WORKSPACE}"
-
-          echo "Gradle (using wrapper)"
-          echo "${GRADLE_VERSION_OUT}"
-
-          echo "Java"
-          echo "${JAVA_VERSION_OUT}"
-
-          echo "OpenSSL"
-          echo "${OPENSSL_VERSION_OUT}"
+          sh script: 'ls -a', label: 'Workspace'
+          sh script: 'chmod +x gradlew && ./gradlew --version', label: 'Gradle'
+          sh script: 'java -version', label: 'Java'
+          sh script: 'openssl version', label: 'OpenSSL'
         }
       }
     }
 
     stage('Generate keys') {
       steps {
-        sh 'mkdir keys'
-        sh 'chmod +x gradlew && ./gradlew genkey -Pforce-genkey'
+        sh script: 'mkdir keys', label: 'Make folder for keys'
+        sh script: 'chmod +x gradlew && ./gradlew genkey -Pforce-genkey', label: 'Generate keys with (potentially) override'
       }
     }
 
     stage('Build') {
       steps {
-        sh 'chmod +x gradlew && ./gradlew clean build bootJar'
+        sh script: 'chmod +x gradlew && ./gradlew clean build bootJar', label: 'Build project and make server jar'
         archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
       }
     }
@@ -48,7 +36,7 @@ pipeline {
     stage('SonarQube Analytics') {
       steps {
         withSonarQubeEnv('SonarMine') {
-            sh 'chmod +x gradlew && ./gradlew sonarqube'
+            sh script: 'chmod +x gradlew && ./gradlew sonarqube', label: 'Run sonar analysis via Gradle'
         }
       }
     }
