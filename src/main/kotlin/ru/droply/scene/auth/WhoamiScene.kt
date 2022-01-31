@@ -2,41 +2,45 @@ package ru.droply.scene.auth
 
 import io.ktor.http.cio.websocket.*
 import kotlinx.serialization.Serializable
-import org.mapstruct.factory.Mappers
 import org.springframework.stereotype.Component
 import ru.droply.dto.user.DroplyUserOutDto
 import ru.droply.feature.context.auth.Auth
 import ru.droply.feature.context.auth.AuthProvider
 import ru.droply.feature.ktor.ctx
 import ru.droply.feature.scene.variety.OutRestScene
+import ru.droply.feature.spring.autowired
 import ru.droply.mapper.DroplyUserMapper
 
-private val droplyUserMapper: DroplyUserMapper = Mappers.getMapper(DroplyUserMapper::class.java)
-
 @Serializable
-data class WhoamiResponse(
+data class WhoamiOutDto(
     val authenticated: Boolean,
     val user: DroplyUserOutDto? = null,
     val provider: AuthProvider? = null
 ) {
     object NotAuthorized {
-        operator fun invoke(): WhoamiResponse {
-            return WhoamiResponse(false)
+        operator fun invoke(): WhoamiOutDto {
+            return WhoamiOutDto(false)
         }
     }
 
     object Authorized {
-        operator fun invoke(auth: Auth): WhoamiResponse {
-            return WhoamiResponse(true, droplyUserMapper.map(auth.user), auth.socialProvider)
+        private val mapper: DroplyUserMapper by autowired()
+
+        operator fun invoke(auth: Auth): WhoamiOutDto {
+            return WhoamiOutDto(
+                authenticated = true,
+                user = mapper.map(auth.user),
+                provider = auth.provider
+            )
         }
     }
 }
 
-typealias NotAuthorized = WhoamiResponse.NotAuthorized
-typealias Authorized = WhoamiResponse.Authorized
+typealias NotAuthorized = WhoamiOutDto.NotAuthorized
+typealias Authorized = WhoamiOutDto.Authorized
 
 @Component
-class WhoamiScene : OutRestScene<WhoamiResponse>(WhoamiResponse.serializer()) {
+class WhoamiScene : OutRestScene<WhoamiOutDto>(WhoamiOutDto.serializer()) {
     override fun DefaultWebSocketSession.handle(request: Unit) =
         if (ctx.auth == null) {
             NotAuthorized()

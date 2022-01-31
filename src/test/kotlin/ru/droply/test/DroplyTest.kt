@@ -1,20 +1,31 @@
 package ru.droply.test
 
 import org.junit.jupiter.api.BeforeEach
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.test.context.ActiveProfiles
-import org.springframework.transaction.annotation.Transactional
-import ru.droply.DroplyApplication
-import ru.droply.feature.spring.autowired
+import org.springframework.test.util.ReflectionTestUtils
+import ru.droply.config.DroplyTestAuthConfig
+import ru.droply.config.DroplyTestJpaConfig
+import ru.droply.config.DroplyTestJwtConfig
+import ru.droply.config.DroplyTestPartsConfig
 
-
-@Transactional
 @ActiveProfiles("test")
-@SpringBootTest(classes = [DroplyApplication::class])
+@SpringBootTest(
+    classes = [
+        DroplyTestJpaConfig::class,
+        DroplyTestJwtConfig::class,
+        DroplyTestPartsConfig::class,
+        DroplyTestAuthConfig::class
+    ]
+)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DroplyTest {
-    var context: TestContext by autowired()
+    @Autowired
+    lateinit var context: TestContext
 
     // Refresh context between tests (on refresh)
     @EventListener
@@ -25,5 +36,15 @@ class DroplyTest {
     @BeforeEach
     fun clearContext() {
         context.clear()
+    }
+
+    fun injectValue(target: Any, field: String, value: Any, logic: Runnable) {
+        val original = ReflectionTestUtils.getField(target, field)
+        try {
+            ReflectionTestUtils.setField(target, field, value)
+            logic.run()
+        } finally {
+            ReflectionTestUtils.setField(target, field, original)
+        }
     }
 }

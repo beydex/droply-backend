@@ -1,32 +1,63 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        LANG = 'en_US.UTF-8'
-        LANGUAGE = 'en_US.UTF-8'
-        LC_ALL = 'en_US.UTF-8'
-        GRADLE_VERSION = '7.3.3'
-        GRADLE_EXEC = '/opt/gradle/gradle-7.3.3/bin/gradle'
+  environment {
+    LANG = 'en_US.UTF-8'
+    LANGUAGE = 'en_US.UTF-8'
+    LC_ALL = 'en_US.UTF-8'
+  }
+
+  stages {
+    stage('Environment') {
+      steps {
+        script {
+          WORKSPACE_OUT = sh(script: 'ls -a', returnStdout: true)
+          GRADLE_VERSION_OUT = sh(script: 'chmod +x gradlew && ./gradlew --version', returnStdout: true)
+          JAVA_VERSION_OUT = sh(script: 'java -version', returnStdout: true)
+          OPENSSL_VERSION_OUT = sh(script: 'openssl version', returnStdout: true)
+
+          echo "Workspace setup"
+          echo "${WORKSPACE}"
+
+          echo "Gradle (using wrapper)"
+          echo "${GRADLE_VERSION_OUT}"
+
+          echo "Java"
+          echo "${JAVA_VERSION_OUT}"
+
+          echo "OpenSSL"
+          echo "${OPENSSL_VERSION_OUT}"
+        }
+      }
     }
 
-    stages {
-        stage('Log configuration') {
-            steps {
-                echo 'GRADLE_EXEC =' + GRADLE_EXEC
-                sh 'java -version'
-            }
-        }
-        stage('Build') {
-            steps {
-                sh '${GRADLE_EXEC} clean build bootJar'
-                archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
-            }
-        }
+    stage('Generate keys') {
+      steps {
+        sh 'mkdir keys'
+        sh 'chmod +x gradlew && ./gradlew genkey -Pforce-genkey'
+      }
     }
 
-    post {
-        always {
-            cleanWs()
-        }
+    stage('Build') {
+      steps {
+        sh 'chmod +x gradlew && ./gradlew clean build bootJar'
+        archiveArtifacts artifacts: '**/build/libs/*.jar', fingerprint: true
+      }
     }
+
+    stage('SonarQube Analytics') {
+      steps {
+        withSonarQubeEnv('SonarMine') {
+            sh 'chmod +x gradlew && ./gradlew sonarqube'
+        }
+      }
+    }
+
+  }
+
+  post {
+    always {
+      cleanWs()
+    }
+  }
 }

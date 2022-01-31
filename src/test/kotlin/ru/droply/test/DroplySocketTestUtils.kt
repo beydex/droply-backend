@@ -23,9 +23,11 @@ fun socket(
 
 fun socketIncoming(
     request: SceneRequest,
+    setup: TestApplicationRequest.() -> Unit = {},
     handle: suspend TestApplicationCall.(incoming: ReceiveChannel<Frame>) -> Unit = {}
 ) = withTestApplication(Application::configureSockets) {
     handleWebSocketConversation("/",
+        setup = setup,
         callback = { incoming, outgoing ->
             outgoing.sendJson(request)
             handle(incoming)

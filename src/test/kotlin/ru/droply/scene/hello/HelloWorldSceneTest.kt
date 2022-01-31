@@ -1,8 +1,8 @@
 package ru.droply.scene.hello
 
 import org.junit.jupiter.api.Test
-import ru.droply.scene.test.HelloRequest
-import ru.droply.scene.test.HelloResponse
+import ru.droply.scene.test.HelloInDto
+import ru.droply.scene.test.HelloOutDto
 import ru.droply.scene.test.WorldResponse
 import ru.droply.test.*
 import kotlin.test.assertEquals
@@ -11,10 +11,10 @@ class HelloWorldSceneTest : DroplyTest() {
 
     @Test
     fun `call hello scene with valid body check response success`() {
-        socketIncoming(makeRequest("hello", HelloRequest("theseems"))) {
+        socketIncoming(makeRequest("hello", HelloInDto("theseems"))) {
             assertEquals(
                 "Welcome to Droply, theseems",
-                assertReceive<HelloResponse>(it).message
+                assertReceive<HelloOutDto>(it).message
             )
         }
     }
@@ -43,7 +43,7 @@ class HelloWorldSceneTest : DroplyTest() {
 
     @Test
     fun `call hello set name then call world check response success`() {
-        socket(makeRequest("hello", HelloRequest("theseems"))) { _, _ ->
+        socket(makeRequest("hello", HelloInDto("theseems"))) { _, _ ->
             socketIncoming(makeRequest("world")) {
                 assertEquals(
                     "hi, theseems",

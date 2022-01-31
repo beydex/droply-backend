@@ -4,7 +4,7 @@ import org.mapstruct.Mapper
 import ru.droply.dto.user.DroplyUserOutDto
 import ru.droply.entity.DroplyUser
 
-@Mapper
+@Mapper(componentModel = "spring")
 interface DroplyUserMapper {
     fun map(user: DroplyUser): DroplyUserOutDto
 }

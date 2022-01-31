@@ -4,7 +4,7 @@ spring:
   datasource:
     url: "jdbc:postgresql://localhost/droply"
     username: "postgres"
-    password: "12345"
+    password: "postgres"
     driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 16
@@ -25,6 +25,11 @@ spring:
       open-in-view: false
 
 droply:
+  security:
+      issuer: "Droply"
+      keys:
+        public: "keys/public.pem"
+        private: "keys/private.pem"
   ktor:
     host: "0.0.0.0"
     port: 8081

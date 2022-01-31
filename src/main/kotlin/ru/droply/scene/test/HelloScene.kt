@@ -7,15 +7,15 @@ import ru.droply.feature.ktor.ctx
 import ru.droply.feature.scene.variety.RestScene
 
 @Serializable
-data class HelloRequest(val name: String)
+data class HelloInDto(val name: String)
 
 @Serializable
-data class HelloResponse(val message: String)
+data class HelloOutDto(val message: String)
 
 @Component
-class HelloScene : RestScene<HelloRequest, HelloResponse>(HelloRequest.serializer(), HelloResponse.serializer()) {
-    override fun DefaultWebSocketSession.handle(request: HelloRequest): HelloResponse {
+class HelloScene : RestScene<HelloInDto, HelloOutDto>(HelloInDto.serializer(), HelloOutDto.serializer()) {
+    override fun DefaultWebSocketSession.handle(request: HelloInDto): HelloOutDto {
         ctx["name"] = request.name
-        return HelloResponse("Welcome to Droply, ${request.name}")
+        return HelloOutDto("Welcome to Droply, ${request.name}")
     }
 }

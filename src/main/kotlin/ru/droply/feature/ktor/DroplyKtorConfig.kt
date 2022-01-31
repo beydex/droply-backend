@@ -10,19 +10,26 @@ import ru.droply.feature.scene.Scene
 import ru.droply.feature.scene.SceneManager
 import ru.droply.feature.scene.SceneRequest
 import ru.droply.feature.spring.autowired
-import ru.droply.scene.auth.GoogleAuthScene
+import ru.droply.scene.auth.AuthScene
 import ru.droply.scene.auth.WhoamiScene
+import ru.droply.scene.auth.google.GoogleAuthScene
 import ru.droply.scene.test.HelloScene
 import ru.droply.scene.test.WorldScene
 import java.time.Duration
 
 private val sceneManager: SceneManager by autowired()
 
-
-private val helloScene: HelloScene by autowired()
-private val worldScene: WorldScene by autowired()
-private val authScene: GoogleAuthScene by autowired()
-private val whoamiScene: WhoamiScene by autowired()
+object Scenes {
+    object Test {
+        internal val hello: HelloScene by autowired()
+        internal val world: WorldScene by autowired()
+    }
+    object Auth {
+        internal val whoami: WhoamiScene by autowired()
+        internal val google: GoogleAuthScene by autowired()
+        internal val auth: AuthScene by autowired()
+    }
+}
 
 fun Application.configureSockets() {
     install(WebSockets) {
@@ -33,10 +40,16 @@ fun Application.configureSockets() {
     }
 
     sceneManager.apply {
-        set("hello", helloScene)
-        set("world", worldScene)
-        set("auth/google", authScene)
-        set("whoami", whoamiScene)
+        with(Scenes.Test) {
+            set("hello", hello)
+            set("world", world)
+        }
+
+        with(Scenes.Auth) {
+            set("auth/whoami", whoami)
+            set("auth/google", google)
+            set("auth", auth)
+        }
     }
 
     routing {

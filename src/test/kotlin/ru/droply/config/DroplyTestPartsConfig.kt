@@ -1,8 +1,7 @@
 package ru.droply.config
 
+import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -12,8 +11,7 @@ import ru.droply.feature.scene.MemorySceneManager
 import ru.droply.feature.scene.SceneManager
 import ru.droply.test.TestContext
 
-@Profile("test")
-@Configuration
+@TestConfiguration
 class DroplyTestPartsConfig {
     @Bean
     fun sceneManager(): SceneManager = MemorySceneManager()
