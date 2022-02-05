@@ -17,6 +17,29 @@ plugins {
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("org.sonarqube") version "3.3"
+    id("com.google.cloud.tools.jib") version "3.2.0"
+}
+
+jib {
+    to {
+        image = "registry.mine.theseems.ru/droply-backend"
+        auth {
+            username = System.getenv("DOCKER_REGISTRY_USERNAME")
+            password = System.getenv("DOCKER_REGISTRY_PASSWORD")
+        }
+
+        setAllowInsecureRegistries(true)
+    }
+
+    // Add keys to the image
+    extraDirectories {
+        paths {
+            path {
+                setFrom(file("keys"))
+                into = "/app/keys"
+            }
+        }
+    }
 }
 
 group = "ru.droply"

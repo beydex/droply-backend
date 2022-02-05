@@ -41,6 +41,47 @@ pipeline {
       }
     }
 
+    stage('Docker build and publish') {
+      when {
+        anyOf {
+            branch "test"
+
+            // Plans
+            branch "production"
+        }
+      }
+      steps {
+        withCredentials([
+            usernamePassword(
+            credentialsId: 'docker-registry',
+            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
+            passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
+            sh script: 'chmod +x gradlew && ./gradlew jib -DsendCredentialsOverHttp=true --image=registry.mine.theseems.ru/droply-backend',
+               label: 'Build and deploy docker image'
+        }
+      }
+    }
+
+    stage('Deploy to test') {
+      when {
+        branch "test"
+      }
+      steps {
+        git branch: 'test',
+            credentialsId: 'bitbucket-ssh',
+            url: 'git@bitbucket.org:beydex/droply-devops.git'
+
+        withCredentials([
+            usernamePassword(
+            credentialsId: 'docker-registry',
+            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
+            passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
+                sh script: 'ansible-playbook ansible/deploy_test.yml',
+                   label: 'Deploy to the test stand: ws://test.mine.theseems.ru'
+        }
+      }
+    }
+
   }
 
   post {
