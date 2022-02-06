@@ -1,6 +1,6 @@
 package ru.droply.scene.test
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.stereotype.Component
 import ru.droply.feature.ktor.ctx

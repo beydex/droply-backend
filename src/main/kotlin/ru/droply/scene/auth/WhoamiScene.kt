@@ -1,6 +1,6 @@
 package ru.droply.scene.auth
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.stereotype.Component
 import ru.droply.dto.user.DroplyUserOutDto

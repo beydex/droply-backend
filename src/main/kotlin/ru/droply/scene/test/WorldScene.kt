@@ -1,6 +1,6 @@
 package ru.droply.scene.test
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.builtins.serializer
 import org.springframework.stereotype.Component
@@ -13,6 +13,6 @@ data class WorldResponse(val message: String)
 
 @Component
 class WorldScene : RestScene<Unit, WorldResponse>(Unit.serializer(), WorldResponse.serializer()) {
-    override fun DefaultWebSocketSession.handle(request: Unit): WorldResponse =
+    override fun DefaultWebSocketSession.handle(request: Unit) =
         WorldResponse("hi, ${ctx.retDefault("name") { "unknown" }}")
 }

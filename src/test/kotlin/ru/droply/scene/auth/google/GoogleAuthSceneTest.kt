@@ -14,7 +14,6 @@ import ru.droply.test.makeRequest
 import ru.droply.test.socketIncoming
 import kotlin.test.assertEquals
 
-
 class GoogleAuthSceneTest : DroplyTest() {
     @Autowired
     private lateinit var googleAuthScene: GoogleAuthScene

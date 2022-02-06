@@ -13,7 +13,6 @@ import org.springframework.core.env.get
 import ru.droply.feature.ktor.configureSockets
 import kotlin.properties.Delegates
 
-
 private lateinit var droplyHost: String
 private var droplyPort by Delegates.notNull<Int>()
 private val droplyBanner = """

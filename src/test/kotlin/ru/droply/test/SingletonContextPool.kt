@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 import ru.droply.feature.context.ConnectionPool
 
 @Component
-class SingletonContextPool: ConnectionPool {
+class SingletonContextPool : ConnectionPool {
     @Autowired
     private lateinit var context: TestContext
 

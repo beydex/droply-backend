@@ -12,6 +12,5 @@ class MemoryConnectionPool : ConnectionPool {
             map[connection] = context
             context
         } else found
-
     }
 }

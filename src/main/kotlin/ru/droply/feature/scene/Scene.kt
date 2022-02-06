@@ -1,6 +1,6 @@
 package ru.droply.feature.scene
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.KSerializer
 
 interface Scene<T : Any> {

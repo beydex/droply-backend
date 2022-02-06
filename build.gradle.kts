@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
-val testContainersVersion: String by project
 
 plugins {
     application
@@ -70,6 +69,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
 
+    // Validation
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+
     // Google Auth
     implementation("com.google.api-client:google-api-client:1.33.1")
 
@@ -90,10 +92,10 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.5.0.Beta2")
     kapt("org.mapstruct:mapstruct-processor:1.5.0.Beta2")
 
-    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     // Embedded Postgres for tests
     testImplementation("com.opentable.components:otj-pg-embedded:0.13.4")
 }
@@ -186,7 +188,6 @@ tasks.register<Exec>("genkey") {
     commandLine("rm", "keys/private.raw.key")
     println("Keys have been successfully generated")
 }
-
 
 /**
  * Task for running Droply backend locally.

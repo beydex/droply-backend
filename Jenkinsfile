@@ -22,7 +22,7 @@ pipeline {
     stage('Generate keys') {
       steps {
         sh script: 'mkdir keys', label: 'Make folder for keys'
-        sh script: 'chmod +x gradlew && ./gradlew genkey -Pforce-genkey', label: 'Generate keys with (potentially) override'
+        sh script: 'chmod +x gradlew && ./gradlew genkey -Pforce-genkey', label: 'Generate keys with possible overwrite'
       }
     }
 

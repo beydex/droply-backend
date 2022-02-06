@@ -14,11 +14,13 @@ fun socket(
     request: SceneRequest,
     handle: suspend TestApplicationCall.(incoming: ReceiveChannel<Frame>, outgoing: SendChannel<Frame>) -> Unit = { _, _ -> }
 ) = withTestApplication(Application::configureSockets) {
-    handleWebSocketConversation("/",
+    handleWebSocketConversation(
+        "/",
         callback = { incoming, outgoing ->
             outgoing.sendJson(request)
             handle(incoming, outgoing)
-        })
+        }
+    )
 }
 
 fun socketIncoming(
@@ -26,12 +28,14 @@ fun socketIncoming(
     setup: TestApplicationRequest.() -> Unit = {},
     handle: suspend TestApplicationCall.(incoming: ReceiveChannel<Frame>) -> Unit = {}
 ) = withTestApplication(Application::configureSockets) {
-    handleWebSocketConversation("/",
+    handleWebSocketConversation(
+        "/",
         setup = setup,
         callback = { incoming, outgoing ->
             outgoing.sendJson(request)
             handle(incoming)
-        })
+        }
+    )
 }
 
 fun makeRequest(path: String, vararg entries: Pair<String, JsonElement>): SceneRequest =

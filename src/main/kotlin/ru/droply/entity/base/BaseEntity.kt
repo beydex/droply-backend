@@ -8,7 +8,7 @@ import javax.persistence.Id
 import javax.persistence.MappedSuperclass
 
 @MappedSuperclass
-abstract class BaseEntity<T: Serializable> {
+abstract class BaseEntity<T : Serializable> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: T? = null
