@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: variety/12-02-2022-1-init.yml
+      relativeToChangelogFile: true

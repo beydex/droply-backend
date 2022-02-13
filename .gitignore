@@ -128,3 +128,8 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 fabric.properties
+
+# Liquibase localy generated changelog
+/droply-data/migrations/generated.yml
+/droply-data/derby.log
+/droply-application/derby.log

@@ -31,6 +31,16 @@ application {
     mainClass.set("ru.droply.DroplyApplicationKt")
 }
 
+// Include migrations
+sourceSets {
+    main {
+        resources {
+            srcDirs("../droply-data/migrations")
+            exclude("generated.yml")
+        }
+    }
+}
+
 dependencies {
     // Droply deps
     implementation(project(":droply-sprintor"))
@@ -71,6 +81,66 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     // Embedded Postgres for tests
     testImplementation("com.opentable.components:otj-pg-embedded:0.13.4")
+}
+
+/**
+ * Task for automatic key generation
+ */
+tasks.register<Exec>("genkey") {
+    val keysDirectory = file("keys")
+    if (keysDirectory.exists() && !project.hasProperty("force-genkey")) {
+        println("Keys already there do you want to regenerate them? [Y/*]")
+
+        if (readLine() != "Y") {
+            commandLine("echo", "ok")
+            return@register
+        }
+    }
+
+    // Remove previous keys
+    keysDirectory.delete()
+
+    if (!keysDirectory.exists()) {
+        println("Making keys directory: $keysDirectory")
+        keysDirectory.mkdir()
+    }
+
+    // Generate private key (not yet PKCS8)
+    exec {
+        commandLine(
+            "openssl", "ecparam",
+            "-genkey",
+            "-name", "prime256v1",
+            "-noout",
+            "-out", "keys/private.raw.key"
+        )
+    }
+
+    // Generate public key (not yet PKCS8)
+    exec {
+        commandLine(
+            "openssl", "ec",
+            "-in", "keys/private.raw.key",
+            "-pubout",
+            "-out", "keys/public.pem"
+        )
+    }
+
+    // Convert private key to PKCS8
+    exec {
+        commandLine(
+            "openssl", "pkcs8",
+            "-topk8",
+            "-inform", "PEM",
+            "-outform", "PEM",
+            "-in", "keys/private.raw.key",
+            "-out", "keys/private.pem",
+            "-nocrypt"
+        )
+    }
+
+    commandLine("rm", "keys/private.raw.key")
+    println("Keys have been successfully generated")
 }
 
 /**
@@ -143,7 +213,7 @@ jib {
     extraDirectories {
         paths {
             path {
-                setFrom(file("../keys"))
+                setFrom(file("keys"))
                 into = "/app/keys"
             }
         }

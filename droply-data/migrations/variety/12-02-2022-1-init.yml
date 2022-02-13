@@ -1,0 +1,31 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1644667625615-1
+      author: theseems (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: droply_userPK
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+            tableName: droply_user
+  - changeSet:
+      id: 1644667625615-2
+      author: theseems (generated)
+      changes:
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: UC_DROPLY_USEREMAIL_COL
+            tableName: droply_user
+
