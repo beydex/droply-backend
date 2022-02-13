@@ -1,6 +1,7 @@
 package ru.droply.feature.ktor
 
-import io.ktor.http.cio.websocket.*
+import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import io.ktor.http.cio.websocket.Frame
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.serialization.KSerializer
@@ -12,12 +13,14 @@ import ru.droply.feature.spring.autowired
 
 object Quit
 
+val json = Json { encodeDefaults = true }
+
 suspend inline fun <reified T> SendChannel<Frame>.sendJson(value: T) {
-    send(Frame.Text(Json.encodeToString(value)))
+    send(Frame.Text(json.encodeToString(value)))
 }
 
 suspend inline fun <T> SendChannel<Frame>.sendJson(value: T, serializer: KSerializer<T>) {
-    send(Frame.Text(Json.encodeToString(serializer, value)))
+    send(Frame.Text(json.encodeToString(serializer, value)))
 }
 
 suspend fun ReceiveChannel<Frame>.retrieveText(action: suspend Frame.Text.() -> Any?) {

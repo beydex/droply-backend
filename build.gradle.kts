@@ -19,28 +19,6 @@ plugins {
     id("com.google.cloud.tools.jib") version "3.2.0"
 }
 
-jib {
-    to {
-        image = "registry.mine.theseems.ru/droply-backend"
-        auth {
-            username = System.getenv("DOCKER_REGISTRY_USERNAME")
-            password = System.getenv("DOCKER_REGISTRY_PASSWORD")
-        }
-
-        setAllowInsecureRegistries(true)
-    }
-
-    // Add keys to the image
-    extraDirectories {
-        paths {
-            path {
-                setFrom(file("keys"))
-                into = "/app/keys"
-            }
-        }
-    }
-}
-
 group = "ru.droply"
 version = "0.0.1"
 application {
@@ -68,6 +46,9 @@ dependencies {
     // DB stuff (with Spring Data & PostgreSQL)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
+
+    // Logging
+    implementation("io.github.microutils:kotlin-logging:2.1.21")
 
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -196,35 +177,48 @@ tasks.register<Exec>("genkey") {
  * Thus, embedded postgres will be in use
  * and other test beans will be there.
  */
-@Suppress("LeakingThis")
-abstract class RunLocally : DefaultTask() {
-    @get:Input
-    abstract val profiles: ListProperty<String>
+tasks.register<DefaultTask>("localrun") {
+    setDependsOn(listOf("testClasses"))
+    setFinalizedBy(listOf("bootRun"))
 
-    init {
-        profiles.convention(listOf("test"))
-        setDependsOn(listOf("testClasses"))
-        setFinalizedBy(listOf("bootRun"))
-    }
-}
-
-tasks.register<RunLocally>("localrun") {
     doFirst {
-        val profilesEnabledInfo = profiles.get().joinToString(" ")
-        logger.error(profilesEnabledInfo)
         System.setProperty("droply.localRun", "true")
-        System.setProperty("spring.profiles.active", profilesEnabledInfo)
+        System.setProperty("spring.profiles.active", "test")
 
-        logger.warn("You are running a dev environment, profiles: $profilesEnabledInfo")
+        logger.warn("You are running a dev environment, only test profile is in use")
     }
 }
 
 /**
  * SonarQube settings
  */
-
 sonarqube {
     properties {
         property("sonar.projectKey", "beydex_droply-backend")
+    }
+}
+
+/**
+ * JIB (Docker build without daemon) settings
+ */
+jib {
+    to {
+        image = "registry.mine.theseems.ru/droply-backend"
+        auth {
+            username = System.getenv("DOCKER_REGISTRY_USERNAME")
+            password = System.getenv("DOCKER_REGISTRY_PASSWORD")
+        }
+
+        setAllowInsecureRegistries(true)
+    }
+
+    // Add keys to the image
+    extraDirectories {
+        paths {
+            path {
+                setFrom(file("keys"))
+                into = "/app/keys"
+            }
+        }
     }
 }

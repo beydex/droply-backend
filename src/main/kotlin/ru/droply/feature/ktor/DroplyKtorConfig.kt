@@ -1,10 +1,8 @@
 package ru.droply.feature.ktor
 
-import com.google.gson.Gson
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.pingPeriod
 import io.ktor.http.cio.websocket.readText
 import io.ktor.http.cio.websocket.timeout
@@ -13,7 +11,9 @@ import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import mu.KotlinLogging
 import ru.droply.feature.middleware.DroplyMiddleware
+import ru.droply.feature.processor.ExceptionProcessor
 import ru.droply.feature.scene.Scene
 import ru.droply.feature.scene.SceneManager
 import ru.droply.feature.scene.SceneRequest
@@ -25,10 +25,11 @@ import ru.droply.scene.test.HelloScene
 import ru.droply.scene.test.ValidationScene
 import ru.droply.scene.test.WorldScene
 import java.time.Duration
-import javax.validation.ConstraintViolationException
 
 private val sceneManager: SceneManager by autowired()
 private val middlewareList: List<DroplyMiddleware> by autowired()
+private val exceptionProcessor: ExceptionProcessor by autowired()
+private val logger = KotlinLogging.logger {}
 
 object Scenes {
     object Test {
@@ -98,35 +99,9 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
                 // Rollout actual scene
                 rollout(actualRequest)
             }
-        } catch (e: ConstraintViolationException) {
-            outgoing.send(
-                Frame.Text(
-                    Gson().toJson(
-                        mapOf(
-                            "success" to false,
-                            "message" to "Incorrect request",
-                            "error" to e.constraintViolations.map {
-                                mapOf(
-                                    "field" to it.propertyPath.toString(),
-                                    "message" to it.message
-                                )
-                            }
-                        )
-                    )
-                )
-            )
         } catch (e: Exception) {
-            outgoing.send(
-                Frame.Text(
-                    Gson().toJson(
-                        mapOf(
-                            "success" to false,
-                            "error" to e.message
-                        )
-                    )
-                )
-            )
-            e.printStackTrace()
+            logger.trace(e) { "Scene handler error: $e" }
+            exceptionProcessor.process(e, session)
         }
     }
 }

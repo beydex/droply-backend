@@ -21,8 +21,7 @@ data class ValidationRequest(
 
 @Serializable
 data class ValidationResponse(
-    val success: Boolean,
-    val errors: List<String>
+    val success: Boolean
 )
 
 typealias Request = ValidationRequest
@@ -30,7 +29,5 @@ typealias Response = ValidationResponse
 
 @Component
 class ValidationScene : RestScene<Request, Response>(Request.serializer(), Response.serializer()) {
-    override fun DefaultWebSocketSession.handle(request: Request): Response {
-        return Response(success = true, errors = listOf())
-    }
+    override fun DefaultWebSocketSession.handle(request: Request) = Response(success = true)
 }

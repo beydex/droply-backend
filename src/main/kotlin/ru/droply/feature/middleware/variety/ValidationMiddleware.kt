@@ -2,7 +2,6 @@ package ru.droply.feature.middleware.variety
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import ru.droply.feature.middleware.DroplyMiddleware
 import ru.droply.feature.scene.Scene
@@ -13,7 +12,6 @@ import kotlin.reflect.full.functions
 import kotlin.reflect.full.hasAnnotation
 
 @Component
-@Qualifier("validation-middleware")
 class ValidationMiddleware : DroplyMiddleware {
     @Autowired
     private lateinit var validator: Validator
