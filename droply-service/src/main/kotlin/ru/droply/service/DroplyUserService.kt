@@ -12,14 +12,12 @@ class DroplyUserService {
     private lateinit var userDao: UserDao
 
     @Transactional
-    fun makeUser(name: String, email: String): DroplyUser = userDao.save(DroplyUser(name, email))
+    fun makeUser(name: String, email: String, avatarUrl: String? = null): DroplyUser =
+        userDao.save(DroplyUser(name, email, avatarUrl))
 
     @Transactional
     fun save(user: DroplyUser): DroplyUser = userDao.save(user)
 
     @Transactional(readOnly = true)
     fun findByEmail(email: String) = userDao.findByEmail(email)
-
-    @Transactional(readOnly = true)
-    fun findAll(): List<DroplyUser> = userDao.findAll()
 }

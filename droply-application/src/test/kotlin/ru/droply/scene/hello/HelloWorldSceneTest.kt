@@ -1,9 +1,9 @@
 package ru.droply.scene.hello
 
 import org.junit.jupiter.api.Test
-import ru.droply.scene.test.HelloInDto
-import ru.droply.scene.test.HelloOutDto
-import ru.droply.scene.test.WorldResponse
+import ru.droply.scenes.endpoint.test.HelloInDto
+import ru.droply.scenes.endpoint.test.HelloOutDto
+import ru.droply.scenes.endpoint.test.WorldResponse
 import ru.droply.test.DroplyTest
 import ru.droply.test.assertReceive
 import ru.droply.test.makeRequest

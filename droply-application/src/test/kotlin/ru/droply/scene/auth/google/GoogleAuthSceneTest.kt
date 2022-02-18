@@ -7,7 +7,10 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.springframework.beans.factory.annotation.Autowired
-import ru.droply.scene.auth.WhoamiOutDto
+import ru.droply.scenes.endpoint.auth.WhoamiOutDto
+import ru.droply.scenes.endpoint.auth.google.GoogleAuthInDto
+import ru.droply.scenes.endpoint.auth.google.GoogleAuthOutDto
+import ru.droply.scenes.endpoint.auth.google.GoogleAuthScene
 import ru.droply.test.DroplyTest
 import ru.droply.test.assertReceive
 import ru.droply.test.makeRequest

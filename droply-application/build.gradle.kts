@@ -14,7 +14,6 @@ plugins {
 
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
-    id("org.sonarqube") version "3.3"
     id("com.google.cloud.tools.jib") version "3.2.0"
 }
 
@@ -46,6 +45,7 @@ dependencies {
     implementation(project(":droply-sprintor"))
     implementation(project(":droply-data"))
     implementation(project(":droply-service"))
+    implementation(project(":droply-scenes"))
 
     // Ktor
     implementation("io.ktor:ktor-websockets:$ktorVersion")
@@ -183,15 +183,6 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
         jvmTarget = "1.8"
-    }
-}
-
-/**
- * SonarQube settings
- */
-sonarqube {
-    properties {
-        property("sonar.projectKey", "beydex_droply-backend")
     }
 }
 

@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
+import ru.droply.data.common.dto.DroplyUserOutDto
 import ru.droply.data.mapper.DroplyUserMapper
-import ru.droply.dto.user.DroplyUserOutDto
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.variety.OutRestScene
 import ru.droply.sprintor.spring.autowired

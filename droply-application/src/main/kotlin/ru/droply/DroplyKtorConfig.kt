@@ -12,12 +12,13 @@ import io.ktor.websocket.webSocket
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
-import ru.droply.scene.auth.AuthScene
-import ru.droply.scene.auth.WhoamiScene
-import ru.droply.scene.auth.google.GoogleAuthScene
-import ru.droply.scene.test.HelloScene
-import ru.droply.scene.test.ValidationScene
-import ru.droply.scene.test.WorldScene
+import ru.droply.scenes.endpoint.auth.AuthScene
+import ru.droply.scenes.endpoint.auth.WhoamiScene
+import ru.droply.scenes.endpoint.auth.google.GoogleAuthScene
+import ru.droply.scenes.endpoint.profile.ProfileScene
+import ru.droply.scenes.endpoint.test.HelloScene
+import ru.droply.scenes.endpoint.test.ValidationScene
+import ru.droply.scenes.endpoint.test.WorldScene
 import ru.droply.sprintor.ktor.retrieveText
 import ru.droply.sprintor.middleware.DroplyMiddleware
 import ru.droply.sprintor.processor.ExceptionProcessor
@@ -39,10 +40,34 @@ object Scenes {
         internal val valid: ValidationScene by autowired()
     }
 
+    object Profile {
+        internal val profile: ProfileScene by autowired()
+    }
+
     object Auth {
         internal val whoami: WhoamiScene by autowired()
         internal val google: GoogleAuthScene by autowired()
         internal val auth: AuthScene by autowired()
+    }
+}
+
+private fun setupScenes() {
+    sceneManager.apply {
+        with(Scenes.Test) {
+            set("hello", hello)
+            set("world", world)
+            set("valid", valid)
+        }
+
+        with(Scenes.Profile) {
+            set("profile", profile)
+        }
+
+        with(Scenes.Auth) {
+            set("auth/whoami", whoami)
+            set("auth/google", google)
+            set("auth", auth)
+        }
     }
 }
 
@@ -58,22 +83,6 @@ fun Application.configureSockets() {
 
     routing {
         webSocket("/") { serveDroplyWebsocket() }
-    }
-}
-
-private fun setupScenes() {
-    sceneManager.apply {
-        with(Scenes.Test) {
-            set("hello", hello)
-            set("world", world)
-            set("valid", valid)
-        }
-
-        with(Scenes.Auth) {
-            set("auth/whoami", whoami)
-            set("auth/google", google)
-            set("auth", auth)
-        }
     }
 }
 

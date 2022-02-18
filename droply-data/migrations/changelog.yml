@@ -2,3 +2,6 @@ databaseChangeLog:
   - include:
       file: variety/12-02-2022-1-init.yml
       relativeToChangelogFile: true
+  - include:
+      file: variety/13-02-2022-1-fix-null-add-avatar-url.yml
+      relativeToChangelogFile: true

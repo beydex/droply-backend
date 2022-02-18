@@ -74,8 +74,11 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
         // Check if there is already a user with provided email
         var endpoint = userService.findByEmail(email)
         if (endpoint == null) {
-            // if there is no name, get the part before '@' in email
-            endpoint = userService.makeUser(payload.name ?: email.split("@")[0], email)
+            endpoint = userService.makeUser(
+                name = payload.name ?: email.split("@")[0],
+                email = email,
+                avatarUrl = if ("picture" in payload) payload["picture"] as String else null
+            )
         }
 
         val auth = Auth(AuthProvider.GOOGLE, endpoint)

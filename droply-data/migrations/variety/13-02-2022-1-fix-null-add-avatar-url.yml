@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1644773092022-3
+      author: theseems (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  name: avatar_url
+                  type: varchar(255)
+            tableName: droply_user
+  - changeSet:
+      id: 1644773092022-1
+      author: theseems (generated)
+      changes:
+        - addNotNullConstraint:
+            columnDataType: varchar(255)
+            columnName: email
+            tableName: droply_user
+            validate: true
+  - changeSet:
+      id: 1644773092022-2
+      author: theseems (generated)
+      changes:
+        - addNotNullConstraint:
+            columnDataType: varchar(255)
+            columnName: name
+            tableName: droply_user
+            validate: true
+

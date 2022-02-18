@@ -23,7 +23,7 @@ class DroplyAuthConfig(
     fun googleIdTokenVerifier(): GoogleIdTokenVerifier {
         val builder = GoogleIdTokenVerifier.Builder(NetHttpTransport(), GsonFactory())
         if (clientId != null) {
-            //builder.audience = listOf(clientId)
+            builder.audience = listOf(clientId)
             logger.info("Google OAuth2 client id is provided.")
         } else {
             logger.warn("No client id provided. Google Auth will not prohibit tokens from other OAuth2 apps.")

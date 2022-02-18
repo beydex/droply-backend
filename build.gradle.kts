@@ -10,6 +10,7 @@ plugins {
     kotlin("plugin.spring") version "1.3.72"
     kotlin("plugin.jpa") version "1.3.72"
     kotlin("kapt") version "1.3.72"
+    id("org.sonarqube") version "3.3"
 }
 
 group = "ru.droply"
@@ -18,4 +19,13 @@ version = "0.0.1"
 repositories {
     mavenCentral()
     google()
+}
+
+/**
+ * SonarQube settings
+ */
+sonarqube {
+    properties {
+        property("sonar.projectKey", "beydex_droply-backend")
+    }
 }
