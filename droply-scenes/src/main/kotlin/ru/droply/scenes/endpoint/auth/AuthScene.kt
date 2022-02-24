@@ -3,11 +3,11 @@ package ru.droply.scenes.endpoint.auth
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
 import ru.droply.sprintor.ktor.ctx
+import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
 
 @Serializable
@@ -33,7 +33,7 @@ typealias Response = AuthOutDto
 typealias Success = AuthOutDto.Success
 typealias Failure = AuthOutDto.Failure
 
-@Component
+@DroplyScene("auth")
 class AuthScene : RestScene<Request, Response>(Request.serializer(), Response.serializer()) {
     @Autowired
     private lateinit var jwtService: JwtService

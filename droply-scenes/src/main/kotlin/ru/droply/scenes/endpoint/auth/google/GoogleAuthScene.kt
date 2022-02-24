@@ -5,13 +5,13 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.mapper.AuthPayloadMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
 import ru.droply.sprintor.ktor.ctx
+import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
 
 @Serializable
@@ -37,7 +37,7 @@ typealias Response = GoogleAuthOutDto
 typealias Failure = GoogleAuthOutDto.Failure
 typealias Success = GoogleAuthOutDto.Success
 
-@Component
+@DroplyScene("auth/google")
 class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Response.serializer()) {
     @Autowired
     private lateinit var tokenVerifier: GoogleIdTokenVerifier

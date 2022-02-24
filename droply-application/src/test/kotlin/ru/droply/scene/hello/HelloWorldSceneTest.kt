@@ -15,7 +15,7 @@ class HelloWorldSceneTest : DroplyTest() {
 
     @Test
     fun `call hello scene with valid body check response success`() {
-        socketIncoming(makeRequest("hello", HelloInDto("theseems"))) {
+        socketIncoming(makeRequest("test/hello", HelloInDto("theseems"))) {
             assertEquals(
                 "Welcome to Droply, theseems",
                 assertReceive<HelloOutDto>(it).message
@@ -26,7 +26,7 @@ class HelloWorldSceneTest : DroplyTest() {
     @Test
     fun `call world scene check response success`() {
         context["name"] = null
-        socketIncoming(makeRequest("world")) {
+        socketIncoming(makeRequest("test/world")) {
             assertEquals(
                 "hi, unknown",
                 assertReceive<WorldResponse>(it).message
@@ -37,7 +37,7 @@ class HelloWorldSceneTest : DroplyTest() {
     @Test
     fun `call world scene with name context check response success`() {
         context["name"] = "someone"
-        socketIncoming(makeRequest("world")) {
+        socketIncoming(makeRequest("test/world")) {
             assertEquals(
                 "hi, someone",
                 assertReceive<WorldResponse>(it).message
@@ -47,8 +47,8 @@ class HelloWorldSceneTest : DroplyTest() {
 
     @Test
     fun `call hello set name then call world check response success`() {
-        socket(makeRequest("hello", HelloInDto("theseems"))) { _, _ ->
-            socketIncoming(makeRequest("world")) {
+        socket(makeRequest("test/hello", HelloInDto("theseems"))) { _, _ ->
+            socketIncoming(makeRequest("test/world")) {
                 assertEquals(
                     "hi, theseems",
                     assertReceive<WorldResponse>(it).message

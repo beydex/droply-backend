@@ -16,10 +16,9 @@ class DroplyMiddlewareConfig {
     private val logger = KotlinLogging.logger {}
 
     @Bean
-    fun middlewareList(): List<DroplyMiddleware> {
+    fun middlewareCollection(): Collection<DroplyMiddleware> {
         return context.getBeansOfType(DroplyMiddleware::class.java)
-            .onEach { logger.info { "Using ${it.key}: ${it.value.javaClass.name}" } }
+            .onEach { (beanName, _) -> logger.info { "Scanned middleware: $beanName" } }
             .values
-            .toList()
     }
 }

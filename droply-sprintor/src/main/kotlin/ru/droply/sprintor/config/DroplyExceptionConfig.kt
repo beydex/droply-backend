@@ -38,6 +38,7 @@ class DroplyExceptionConfig {
                 @Suppress("UNCHECKED_CAST")
                 val exceptionClass = function.parameters[1].type.classifier as KClass<out Exception>
                 processor.append(exceptionClass) { exception, session ->
+                    // Pass last parameter as null (injected serializer parameter or some other stuff)
                     function.call(container, exception, session, null)
                 }
 

@@ -12,13 +12,6 @@ import io.ktor.websocket.webSocket
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
-import ru.droply.scenes.endpoint.auth.AuthScene
-import ru.droply.scenes.endpoint.auth.WhoamiScene
-import ru.droply.scenes.endpoint.auth.google.GoogleAuthScene
-import ru.droply.scenes.endpoint.profile.ProfileScene
-import ru.droply.scenes.endpoint.test.HelloScene
-import ru.droply.scenes.endpoint.test.ValidationScene
-import ru.droply.scenes.endpoint.test.WorldScene
 import ru.droply.sprintor.ktor.retrieveText
 import ru.droply.sprintor.middleware.DroplyMiddleware
 import ru.droply.sprintor.processor.ExceptionProcessor
@@ -29,47 +22,13 @@ import ru.droply.sprintor.spring.autowired
 import java.time.Duration
 
 private val sceneManager: SceneManager by autowired()
-private val middlewareList: List<DroplyMiddleware> by autowired()
+private val sceneMap: Map<String, Scene<*>> by autowired("sceneMap")
+
+private val middlewareCollection: Collection<DroplyMiddleware> by autowired("middlewareCollection")
+
 private val exceptionProcessor: ExceptionProcessor by autowired()
+
 private val logger = KotlinLogging.logger {}
-
-object Scenes {
-    object Test {
-        internal val hello: HelloScene by autowired()
-        internal val world: WorldScene by autowired()
-        internal val valid: ValidationScene by autowired()
-    }
-
-    object Profile {
-        internal val profile: ProfileScene by autowired()
-    }
-
-    object Auth {
-        internal val whoami: WhoamiScene by autowired()
-        internal val google: GoogleAuthScene by autowired()
-        internal val auth: AuthScene by autowired()
-    }
-}
-
-private fun setupScenes() {
-    sceneManager.apply {
-        with(Scenes.Test) {
-            set("hello", hello)
-            set("world", world)
-            set("valid", valid)
-        }
-
-        with(Scenes.Profile) {
-            set("profile", profile)
-        }
-
-        with(Scenes.Auth) {
-            set("auth/whoami", whoami)
-            set("auth/google", google)
-            set("auth", auth)
-        }
-    }
-}
 
 fun Application.configureSockets() {
     install(WebSockets) {
@@ -79,7 +38,11 @@ fun Application.configureSockets() {
         masking = false
     }
 
-    setupScenes()
+    // Setting up scenes
+    sceneMap.forEach { (path, scene) ->
+        sceneManager[path] = scene
+        logger.info { "Scene $path: ${scene::class}" }
+    }
 
     routing {
         webSocket("/") { serveDroplyWebsocket() }
@@ -92,16 +55,14 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
         val text = readText()
         try {
             val sceneRequest = Json.decodeFromString<SceneRequest>(text)
-            val scene: Scene<Any>? = sceneManager[sceneRequest.path]
-            val requestContent = sceneRequest.request
+            val scene: Scene<Any> = sceneManager[sceneRequest.path]
+                ?: throw IllegalStateException("No such scene")
 
-            if (scene == null) {
-                throw IllegalStateException("No such route")
-            }
+            val requestContent = sceneRequest.request
 
             scene.apply {
                 val actualRequest = Json.decodeFromString(serializer, requestContent.toString())
-                middlewareList.forEach {
+                middlewareCollection.forEach {
                     // Process before forward middleware scenarios
                     it.beforeForward(scene, actualRequest, session)
                 }

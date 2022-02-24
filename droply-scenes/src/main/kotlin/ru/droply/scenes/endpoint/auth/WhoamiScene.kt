@@ -2,12 +2,12 @@ package ru.droply.scenes.endpoint.auth
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
-import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.common.dto.DroplyUserOutDto
 import ru.droply.data.mapper.DroplyUserMapper
 import ru.droply.sprintor.ktor.ctx
+import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.OutRestScene
 import ru.droply.sprintor.spring.autowired
 
@@ -39,7 +39,7 @@ data class WhoamiOutDto(
 typealias NotAuthorized = WhoamiOutDto.NotAuthorized
 typealias Authorized = WhoamiOutDto.Authorized
 
-@Component
+@DroplyScene("auth/whoami")
 class WhoamiScene : OutRestScene<WhoamiOutDto>(WhoamiOutDto.serializer()) {
     override fun DefaultWebSocketSession.handle(request: Unit) =
         if (ctx.auth == null) {

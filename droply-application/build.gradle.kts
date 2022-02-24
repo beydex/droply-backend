@@ -27,7 +27,7 @@ tasks.withType<Test> {
 }
 
 application {
-    mainClass.set("ru.droply.DroplyApplicationKt")
+    mainClass.set("ru.droply.DroplySpringApplicationKt")
 }
 
 // Include migrations

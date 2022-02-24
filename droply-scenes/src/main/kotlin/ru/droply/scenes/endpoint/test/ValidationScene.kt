@@ -2,8 +2,9 @@ package ru.droply.scenes.endpoint.test
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Profile
 import ru.droply.sprintor.middleware.validation.ValidationRequired
+import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
 import javax.validation.constraints.Email
 import javax.validation.constraints.Pattern
@@ -28,7 +29,8 @@ data class ValidationResponse(
 typealias Request = ValidationRequest
 typealias Response = ValidationResponse
 
-@Component
+@Profile("test")
+@DroplyScene("test/validation")
 @ValidationRequired
 class ValidationScene : RestScene<Request, Response>(Request.serializer(), Response.serializer()) {
     override fun DefaultWebSocketSession.handle(request: Request) = Response(success = true)

@@ -19,18 +19,18 @@ private var droplyPort by Delegates.notNull<Int>()
 class DroplyApplication : CommandLineRunner {
     // Host for Ktor WebSocket server
     @Value("\${droply.ktor.host}")
-    private var springHost: String = "0.0.0.0"
+    private var droplyApplicationHost: String = "0.0.0.0"
 
     // Port for Ktor WebSocket server
     @Value("\${droply.ktor.port}")
-    private var springPort = 8081
+    private var droplyApplicationPort = 8081
 
     @Autowired
     private lateinit var environment: Environment
 
     override fun run(vararg args: String?) {
-        droplyHost = springHost
-        droplyPort = springPort
+        droplyHost = droplyApplicationHost
+        droplyPort = droplyApplicationPort
         println(makeBanner(environment))
     }
 }
