@@ -36,7 +36,8 @@ pipeline {
     stage('SonarQube Analytics') {
       steps {
         withSonarQubeEnv('SonarMine') {
-            sh script: 'chmod +x gradlew && ./gradlew sonarqube', label: 'Run sonar analysis via Gradle'
+            sh script: 'chmod +x gradlew && ./gradlew sonarqube',
+               label: 'Run sonar analysis via Gradle'
         }
       }
     }
@@ -45,9 +46,7 @@ pipeline {
       when {
         anyOf {
             branch "test"
-
-            // Plans
-            branch "production"
+            branch "master"
         }
       }
       steps {
@@ -56,29 +55,42 @@ pipeline {
             credentialsId: 'docker-registry',
             usernameVariable: 'DOCKER_REGISTRY_USERNAME',
             passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
-            sh script: 'chmod +x gradlew && ./gradlew jib -DsendCredentialsOverHttp=true --image=registry.mine.theseems.ru/droply-backend',
-               label: 'Build and deploy docker image'
+            sh script: 'chmod +x gradlew && ./gradlew jib -DsendCredentialsOverHttp=true --image=registry.mine.theseems.ru/droply-backend:' + env.BRANCH_NAME,
+               label: 'Build and deploy docker image: ' + env.BRANCH_NAME
         }
       }
     }
 
-    stage('Deploy to test') {
+    stage('Stand Deploy Application') {
       when {
-        branch "test"
+        anyOf {
+            branch "test"
+            branch "master"
+        }
       }
       steps {
-        git branch: 'test',
+        git branch: env.BRANCH_NAME,
             credentialsId: 'bitbucket-ssh',
             url: 'git@bitbucket.org:beydex/droply-devops.git'
 
-        withCredentials([
-            usernamePassword(
-            credentialsId: 'docker-registry',
-            usernameVariable: 'DOCKER_REGISTRY_USERNAME',
-            passwordVariable: 'DOCKER_REGISTRY_PASSWORD')]) {
-                sh script: 'ansible-playbook ansible/deploy_test.yml',
-                   label: 'Deploy to the test stand: ws://test.mine.theseems.ru'
+        withCredentials([file(credentialsId: 'common-stand-params', variable: 'STAND_PARAMS')]) {
+                sh script: 'cp ${STAND_PARAMS} common.env',
+                   label: 'Move common stand params nearby'
         }
+
+        withCredentials([file(credentialsId: 'stand-' + env.BRANCH_NAME + '-params', variable: 'STAND_PARAMS')]) {
+                sh script: 'cp ${STAND_PARAMS} stand.env',
+                   label: 'Move stand-related params nearby'
+        }
+
+        sh script: 'cat common.env stand.env > params.env && rm stand.env && rm common.env',
+           label: 'Formatting fulfilled stand params'
+
+        sh script: """
+            set +x
+            export \$(grep -v '^#' params.env | xargs) && ansible-playbook ansible/deploy.yml && rm params.env
+            """,
+           label: 'Deploy application via Ansible'
       }
     }
 
