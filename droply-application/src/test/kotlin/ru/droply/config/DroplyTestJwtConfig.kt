@@ -10,7 +10,7 @@ import ru.droply.service.config.DroplyJwtConfig
 @TestConfiguration
 class DroplyTestJwtConfig {
     @Bean
-    fun algorithm(): Algorithm = Algorithm.HMAC256("somebody told me")
+    fun algorithm(): Algorithm = Algorithm.HMAC256("somebody told me you")
 
     @Bean
     fun jwtVerifier(): JWTVerifier = JWT.require(algorithm()).build()

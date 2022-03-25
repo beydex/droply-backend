@@ -4,6 +4,10 @@ version = "0.0.1"
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
+val googleApiClientVersion: String by project
+val javaJwtVersion: String by project
+val bcprovVersion: String by project
+val mockitoKotlinVersion: String by project
 
 plugins {
     application
@@ -52,14 +56,11 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
     // Google Auth
-    implementation("com.google.api-client:google-api-client:1.33.1")
+    implementation("com.google.api-client:google-api-client:$googleApiClientVersion")
 
     // JWT
-    implementation("com.auth0:java-jwt:3.18.3")
-    implementation("org.bouncycastle:bcprov-jdk15on:1.69")
-
-    // Logging
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
+    implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation("org.bouncycastle:bcprov-jdk15on:$bcprovVersion")
 
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -68,19 +69,14 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
 
-    // Kotlin deps
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.2")
-
     // Test stuff
-    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
     // Embedded Postgres for tests
-    testImplementation("com.opentable.components:otj-pg-embedded:0.13.4")
+    testImplementation("io.zonky.test:embedded-postgres:1.3.1")
+    implementation(enforcedPlatform("io.zonky.test.postgres:embedded-postgres-binaries-bom:13.4.0"))
 }
 
 /**
@@ -89,8 +85,6 @@ dependencies {
 tasks.register<Exec>("genkey") {
     val keysDirectory = file("keys")
     if (keysDirectory.exists() && !project.hasProperty("force-genkey")) {
-        println("Keys already there do you want to regenerate them? [Y/*]")
-
         if (readLine() != "Y") {
             commandLine("echo", "ok")
             return@register

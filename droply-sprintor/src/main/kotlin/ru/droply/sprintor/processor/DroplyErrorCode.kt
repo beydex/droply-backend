@@ -4,5 +4,5 @@ enum class DroplyErrorCode {
     BAD_REQUEST,
     MALFORMED_REQUEST,
     INTERNAL_ERROR,
-    UNAUTHORIZED
+    UNAUTHORIZED,
 }

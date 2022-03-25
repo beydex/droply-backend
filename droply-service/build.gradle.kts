@@ -4,6 +4,9 @@ version = "0.0.1"
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
+val googleApiClientVersion: String by project
+val javaJwtVersion: String by project
+val bcprovVersion: String by project
 
 plugins {
     application
@@ -25,24 +28,15 @@ dependencies {
     implementation(project(":droply-sprintor"))
     implementation(project(":droply-data"))
 
-    // Logging
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
-
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
 
     // Google Auth
-    implementation("com.google.api-client:google-api-client:1.33.1")
+    implementation("com.google.api-client:google-api-client:$googleApiClientVersion")
 
     // JWT
-    implementation("com.auth0:java-jwt:3.18.3")
-    implementation("org.bouncycastle:bcprov-jdk15on:1.69")
-
-    // Kotlin deps
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.2")
+    implementation("com.auth0:java-jwt:$javaJwtVersion")
+    implementation("org.bouncycastle:bcprov-jdk15on:$bcprovVersion")
 
     // DB stuff (with Spring Data & PostgreSQL)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

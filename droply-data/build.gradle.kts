@@ -4,6 +4,8 @@ version = "0.0.1"
 val ktorVersion: String by project
 val kotlinVersion: String by project
 val logbackVersion: String by project
+val liquibaseVersion: String by project
+val mapstructVersion: String by project
 
 plugins {
     application
@@ -52,22 +54,14 @@ dependencies {
     // DB stuff (with Spring Data & PostgreSQL)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
-    // Migrations
-    implementation("org.liquibase.ext:liquibase-hibernate5:4.7.1")
-    implementation("org.liquibase:liquibase-core:4.7.1")
 
-    // Logging
-    implementation("io.github.microutils:kotlin-logging:2.1.21")
+    // Migrations
+    implementation("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
+    implementation("org.liquibase:liquibase-core:$liquibaseVersion")
 
     // MapStruct
-    implementation("org.mapstruct:mapstruct:1.5.0.Beta2")
-    kapt("org.mapstruct:mapstruct-processor:1.5.0.Beta2")
-
-    // Kotlin deps
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json-jvm:1.3.2")
+    implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
 }
 
 java {
@@ -98,8 +92,8 @@ tasks.findByPath("diffChangeLog")?.apply {
 tasks.register<JavaExec>("makemigrations") {
     dependencies {
         // Migrations
-        implementation("org.liquibase.ext:liquibase-hibernate5:4.7.1")
-        implementation("org.liquibase:liquibase-core:4.7.1")
+        implementation("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
+        implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     }
 
     classpath(sourceSets.main.get().runtimeClasspath)
@@ -123,8 +117,8 @@ tasks.register<JavaExec>("makemigrations") {
 tasks.register<JavaExec>("applymigrations") {
     dependencies {
         // Migrations
-        implementation("org.liquibase.ext:liquibase-hibernate5:4.7.1")
-        implementation("org.liquibase:liquibase-core:4.7.1")
+        implementation("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
+        implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     }
 
     classpath(sourceSets.main.get().runtimeClasspath)
@@ -148,8 +142,8 @@ tasks.register<JavaExec>("applymigrations") {
 tasks.register<JavaExec>("diffmigrations") {
     dependencies {
         // Migrations
-        implementation("org.liquibase.ext:liquibase-hibernate5:4.7.1")
-        implementation("org.liquibase:liquibase-core:4.7.1")
+        implementation("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
+        implementation("org.liquibase:liquibase-core:$liquibaseVersion")
     }
 
     classpath(sourceSets.main.get().runtimeClasspath)

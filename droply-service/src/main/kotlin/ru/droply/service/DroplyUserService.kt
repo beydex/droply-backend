@@ -20,4 +20,10 @@ class DroplyUserService {
 
     @Transactional(readOnly = true)
     fun findByEmail(email: String) = userDao.findByEmail(email)
+
+    @Transactional
+    fun updateUserUrid(user: DroplyUser): Int {
+        userDao.updateUserUrid(user.id!!)
+        return userDao.findByEmail(user.email)!!.urid!!
+    }
 }

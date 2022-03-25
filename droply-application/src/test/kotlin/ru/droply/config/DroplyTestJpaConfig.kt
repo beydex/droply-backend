@@ -1,7 +1,7 @@
 package ru.droply.config
 
-import com.opentable.db.postgres.embedded.EmbeddedPostgres
 import com.zaxxer.hikari.HikariDataSource
+import io.zonky.test.db.postgres.embedded.EmbeddedPostgres
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -63,7 +63,7 @@ class DroplyTestJpaConfig(
         val jpaProperties: MutableMap<String, Any> = HashMap()
         jpaProperties["hibernate.hbm2ddl.auto"] = "update"
         jpaProperties["hibernate.physical_naming_strategy"] = SpringPhysicalNamingStrategy::class.java
-        jpaProperties["hibernate.dialect"] = "org.hibernate.dialect.PostgreSQLDialect"
+        jpaProperties["hibernate.dialect"] = "org.hibernate.dialect.PostgreSQL10Dialect"
 
         // Enable SQL log if profile is set
         if (environment.acceptsProfiles(Profiles.of("show-sql"))) {
