@@ -1,10 +1,10 @@
 package ru.droply.data.entity
 
-import ru.droply.data.entity.base.BaseEntity
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.SecondaryTable
+import ru.droply.data.entity.base.BaseEntity
 
 @Entity
 @SecondaryTable(

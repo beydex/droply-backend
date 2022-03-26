@@ -17,7 +17,7 @@ spring:
     properties:
       hibernate.format_sql: true
       hibernate.jdbc.lob.non_contextual_creation: true
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
   liquibase:
     change-log: classpath:changelog.yml
 

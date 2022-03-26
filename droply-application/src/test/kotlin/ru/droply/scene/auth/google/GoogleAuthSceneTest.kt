@@ -35,7 +35,7 @@ class GoogleAuthSceneTest : DroplyTest() {
 
     @Test
     fun `call google auth valid token without name success`() {
-        feignGoogleAuth("me@theseems.ru",) {
+        feignGoogleAuth("me@theseems.ru") {
             socketIncoming(makeRequest("auth/google", GoogleAuthInDto("<mocked>"))) {
                 assertReceive<GoogleAuthOutDto>(it).apply {
                     assert(success) { "Failed response $this" }

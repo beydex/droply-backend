@@ -4,12 +4,12 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.google.gson.Gson
+import java.util.*
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.service.config.DroplyJwtConfig
-import java.util.Base64
 
 @Service
 class JwtService {

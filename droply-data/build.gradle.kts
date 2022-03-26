@@ -29,10 +29,10 @@ repositories {
  */
 val liquibase = mutableMapOf(
     "referenceUrl" to
-        "hibernate:spring:ru.droply.data.entity" +
-        "?dialect=org.hibernate.dialect.PostgreSQL10Dialect" +
-        "&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy" +
-        "&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy",
+            "hibernate:spring:ru.droply.data.entity" +
+            "?dialect=org.hibernate.dialect.PostgreSQL10Dialect" +
+            "&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy" +
+            "&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy",
     "mainChangeLog" to "migrations/changelog.yml",
     "newChangeLog" to "migrations/generated.yml",
     "referenceDriver" to "liquibase.ext.hibernate.database.connection.HibernateDriver",

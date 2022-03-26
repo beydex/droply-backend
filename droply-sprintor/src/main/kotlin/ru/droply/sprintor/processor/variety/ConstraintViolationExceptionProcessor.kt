@@ -1,13 +1,13 @@
 package ru.droply.sprintor.processor.variety
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import javax.validation.ConstraintViolationException
 import kotlinx.serialization.Serializable
 import org.springframework.stereotype.Component
 import ru.droply.sprintor.ktor.sendJson
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.DroplyErrorResponse
 import ru.droply.sprintor.processor.ExceptionHandlerContainer
-import javax.validation.ConstraintViolationException
 
 @Component
 @ExceptionHandlerContainer

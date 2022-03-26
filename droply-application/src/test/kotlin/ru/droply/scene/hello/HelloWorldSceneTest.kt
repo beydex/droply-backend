@@ -12,7 +12,6 @@ import ru.droply.test.socketIncoming
 import kotlin.test.assertEquals
 
 class HelloWorldSceneTest : DroplyTest() {
-
     @Test
     fun `call hello scene with valid body check response success`() {
         socketIncoming(makeRequest("test/hello", HelloInDto("theseems"))) {

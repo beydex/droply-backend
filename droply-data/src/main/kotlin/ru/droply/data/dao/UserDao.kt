@@ -12,9 +12,11 @@ interface UserDao : BaseDao<Long, DroplyUser> {
     fun findByUrid(urid: Int): DroplyUser?
 
     @Modifying
-    @Query("""
+    @Query(
+        """
         LOCK TABLE droply_user_id_urid IN ACCESS EXCLUSIVE MODE;
         CALL make_random_code(:userId)
-        """, nativeQuery = true)
+        """, nativeQuery = true
+    )
     fun updateUserUrid(@Param("userId") userId: Long)
 }

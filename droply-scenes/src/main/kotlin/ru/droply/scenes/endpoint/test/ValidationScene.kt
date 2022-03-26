@@ -1,13 +1,13 @@
 package ru.droply.scenes.endpoint.test
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import javax.validation.constraints.Email
+import javax.validation.constraints.Pattern
 import kotlinx.serialization.Serializable
 import org.springframework.context.annotation.Profile
 import ru.droply.sprintor.middleware.validation.ValidationRequired
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
-import javax.validation.constraints.Email
-import javax.validation.constraints.Pattern
 
 // Source: https://www.baeldung.com/java-regex-validate-phone-numbers#multiple
 const val PHONE_REGEX: String =

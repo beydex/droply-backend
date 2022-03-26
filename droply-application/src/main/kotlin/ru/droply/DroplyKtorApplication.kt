@@ -9,17 +9,19 @@ import io.ktor.http.cio.websocket.timeout
 import io.ktor.routing.routing
 import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
+import java.time.Duration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import ru.droply.sprintor.ktor.retrieveText
 import ru.droply.sprintor.middleware.DroplyMiddleware
+import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.ExceptionProcessor
+import ru.droply.sprintor.processor.exception.DroplyException
 import ru.droply.sprintor.scene.Scene
 import ru.droply.sprintor.scene.SceneManager
 import ru.droply.sprintor.scene.SceneRequest
 import ru.droply.sprintor.spring.autowired
-import java.time.Duration
 
 private val sceneManager: SceneManager by autowired()
 private val sceneMap: Map<String, Scene<*>> by autowired("sceneMap")
@@ -41,7 +43,7 @@ fun Application.configureSockets() {
     // Setting up scenes
     sceneMap.forEach { (path, scene) ->
         sceneManager[path] = scene
-        logger.info { "Scene $path: ${scene::class}" }
+        logger.info { "Registered scene $path: ${scene::class}" }
     }
 
     routing {
@@ -56,7 +58,7 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
         try {
             val sceneRequest = Json.decodeFromString<SceneRequest>(text)
             val scene: Scene<Any> = sceneManager[sceneRequest.path]
-                ?: throw IllegalStateException("No such scene")
+                ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND, message = "No such scene")
 
             val requestContent = sceneRequest.request
 

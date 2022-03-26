@@ -2,6 +2,7 @@ package ru.droply.config
 
 import com.zaxxer.hikari.HikariDataSource
 import io.zonky.test.db.postgres.embedded.EmbeddedPostgres
+import javax.sql.DataSource
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -19,7 +20,6 @@ import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.annotation.EnableTransactionManagement
 import org.springframework.transaction.jta.JtaTransactionManager
-import javax.sql.DataSource
 
 @TestConfiguration
 @EnableTransactionManagement
