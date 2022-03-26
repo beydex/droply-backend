@@ -19,6 +19,20 @@ pipeline {
       }
     }
 
+    stage('Send notification') {
+        steps {
+            withCredentials([
+                string(credentialsId: 'telegram-bot-token', variable: 'TOKEN'),
+                string(credentialsId: 'telegram-bot-chat', variable: 'CHAT_ID')
+            ]) {
+                sh """
+                    curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown \
+                    -d text='Запуск 🕙 *${env.BRANCH_NAME} # ${env.BUILD_NUMBER}*\n­\nBlue Ocean: ${env.RUN_DISPLAY_URL}'
+                """
+            }
+        }
+    }
+
     stage('Generate keys') {
       steps {
         sh script: 'mkdir keys', label: 'Make folder for keys'
@@ -97,6 +111,30 @@ pipeline {
   }
 
   post {
+    success {
+        withCredentials([
+            string(credentialsId: 'telegram-bot-token', variable: 'TOKEN'),
+            string(credentialsId: 'telegram-bot-chat', variable: 'CHAT_ID')
+        ]) {
+            sh """
+                curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown \
+                -d text='✅ *${env.BRANCH_NAME} # ${env.BUILD_NUMBER}*\n­\nДжоба успешно отработала.\n­\n${env.BUILD_URL}'
+            """
+        }
+    }
+
+    failure {
+        withCredentials([
+            string(credentialsId: 'telegram-bot-token', variable: 'TOKEN'),
+            string(credentialsId: 'telegram-bot-chat', variable: 'CHAT_ID')
+        ]) {
+            sh """
+                curl -s -X POST https://api.telegram.org/bot${TOKEN}/sendMessage -d chat_id=${CHAT_ID} -d parse_mode=markdown \
+                -d text='❌ *${env.BRANCH_NAME} # ${env.BUILD_NUMBER}*\n­\nДжоба **ЗАВЕРШИЛАСЬ НЕУДАЧНО**.\n­\n${env.BUILD_URL}'
+            """
+        }
+    }
+
     always {
       cleanWs()
     }
