@@ -21,6 +21,17 @@ class DroplyUserService {
     @Transactional(readOnly = true)
     fun findByEmail(email: String) = userDao.findByEmail(email)
 
+    @Transactional(readOnly = true)
+    fun findByUrid(urid: Int) = userDao.findByUrid(urid)
+
+    @Transactional
+    fun removeUserByEmail(email: String) {
+        val user = userDao.findByEmail(email)
+        if (user != null) {
+            userDao.delete(user)
+        }
+    }
+
     @Transactional
     fun updateUserUrid(user: DroplyUser): Int {
         userDao.updateUserUrid(user.id!!)

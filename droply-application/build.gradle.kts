@@ -16,6 +16,7 @@ plugins {
     kotlin("plugin.serialization")
     kotlin("plugin.spring")
 
+    id("jacoco")
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
     id("com.google.cloud.tools.jib") version "3.2.0"
@@ -202,5 +203,15 @@ jib {
                 into = "/app/keys"
             }
         }
+    }
+}
+
+tasks.test {
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required.set(true)
     }
 }

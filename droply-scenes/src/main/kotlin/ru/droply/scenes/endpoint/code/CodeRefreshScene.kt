@@ -10,7 +10,7 @@ import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.OutRestScene
 
 @Serializable
-data class DroplyCodeOutDto(val code: Int)
+data class DroplyCodeOutDto(val success: Boolean, val code: Int)
 
 @DroplyScene("code/refresh")
 @AuthRequired
@@ -18,8 +18,8 @@ class CodeRefreshScene : OutRestScene<DroplyCodeOutDto>(DroplyCodeOutDto.seriali
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: Unit): DroplyCodeOutDto {
-        val code = userService.updateUserUrid(ctx.auth!!.user)
-        return DroplyCodeOutDto(code)
-    }
+    override fun DefaultWebSocketSession.handle(request: Unit) = DroplyCodeOutDto(
+        success = true,
+        code = userService.updateUserUrid(ctx.auth!!.user)
+    )
 }

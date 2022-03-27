@@ -12,6 +12,7 @@ import ru.droply.config.DroplyTestAuthConfig
 import ru.droply.config.DroplyTestJpaConfig
 import ru.droply.config.DroplyTestJwtConfig
 import ru.droply.config.DroplyTestPartsConfig
+import ru.droply.service.DroplyUserService
 
 @ActiveProfiles("test")
 @SpringBootTest(
@@ -24,6 +25,9 @@ import ru.droply.config.DroplyTestPartsConfig
 )
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class DroplyTest {
+    @Autowired
+    lateinit var userService: DroplyUserService
+
     @Autowired
     lateinit var context: TestContext
 
