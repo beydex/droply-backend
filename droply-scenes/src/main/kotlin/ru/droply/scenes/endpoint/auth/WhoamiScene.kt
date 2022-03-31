@@ -2,49 +2,48 @@ package ru.droply.scenes.endpoint.auth
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
+import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.common.dto.DroplyUserOutDto
+import ru.droply.data.entity.DroplyUser
 import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.ktor.ctx
+import ru.droply.sprintor.middleware.security.AuthRequired
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.OutRestScene
 import ru.droply.sprintor.spring.autowired
 
 @Serializable
 data class WhoamiOutDto(
-    val authenticated: Boolean,
+    val success: Boolean,
     val user: DroplyUserOutDto? = null,
     val provider: AuthProvider? = null
 ) {
-    object NotAuthorized {
-        operator fun invoke(): WhoamiOutDto {
-            return WhoamiOutDto(false)
-        }
-    }
-
     object Authorized {
         private val mapper: DroplyUserMapper by autowired()
 
-        operator fun invoke(auth: Auth): WhoamiOutDto {
+        operator fun invoke(auth: Auth, user: DroplyUser): WhoamiOutDto {
             return WhoamiOutDto(
-                authenticated = true,
-                user = mapper.map(auth.user),
+                success = true,
+                user = mapper.map(user),
                 provider = auth.provider
             )
         }
     }
 }
 
-typealias NotAuthorized = WhoamiOutDto.NotAuthorized
-typealias Authorized = WhoamiOutDto.Authorized
-
 @DroplyScene("auth/whoami")
+@AuthRequired
 class WhoamiScene : OutRestScene<WhoamiOutDto>(WhoamiOutDto.serializer()) {
-    override fun DefaultWebSocketSession.handle(request: Unit) =
-        if (ctx.auth == null) {
-            NotAuthorized()
-        } else {
-            Authorized(ctx.auth!!)
-        }
+    @Autowired
+    private lateinit var userService: DroplyUserService
+
+    override fun DefaultWebSocketSession.handle(request: Unit): WhoamiOutDto {
+        return WhoamiOutDto.Authorized(
+            auth = ctx.auth!!,
+            user = userService.requireUser(ctx)
+        )
+    }
 }

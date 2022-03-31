@@ -20,6 +20,6 @@ class CodeRefreshScene : OutRestScene<DroplyCodeOutDto>(DroplyCodeOutDto.seriali
 
     override fun DefaultWebSocketSession.handle(request: Unit) = DroplyCodeOutDto(
         success = true,
-        code = userService.updateUserUrid(ctx.auth!!.user)
+        code = userService.updateUserUrid(userService.requireUser(ctx))
     )
 }

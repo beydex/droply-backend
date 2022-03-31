@@ -1,6 +1,7 @@
-package ru.droply.sprintor.middleware
+package ru.droply.middleware
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import ru.droply.sprintor.middleware.DroplyMiddleware
 import ru.droply.sprintor.scene.Scene
 import kotlin.reflect.KClass
 import kotlin.reflect.full.findAnnotations

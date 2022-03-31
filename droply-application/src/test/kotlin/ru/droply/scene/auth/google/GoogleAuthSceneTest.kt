@@ -57,7 +57,7 @@ class GoogleAuthSceneTest : DroplyTest() {
 
             socketIncoming(makeRequest("auth/whoami")) {
                 val response = assertReceive<WhoamiOutDto>(it)
-                assert(response.authenticated)
+                assert(response.success)
 
                 val user = response.user!!
                 assertEquals("SecurityControl", user.name)

@@ -42,7 +42,7 @@ class AuthScene : RestScene<Request, Response>(Request.serializer(), Response.se
     private lateinit var userService: DroplyUserService
 
     override fun DefaultWebSocketSession.handle(request: Request): Response {
-        if (ctx.auth != null) {
+        if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in")
         }
 

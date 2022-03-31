@@ -1,12 +1,13 @@
 package ru.droply.scenes.endpoint.auth
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import kotlinx.serialization.Serializable
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.middleware.security.AuthRequired
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.OutRestScene
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class LogoutSceneOutDto(val success: Boolean)
 
 @DroplyScene("auth/logout")

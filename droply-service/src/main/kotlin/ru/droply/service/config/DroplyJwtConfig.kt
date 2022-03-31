@@ -5,6 +5,9 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import java.security.interfaces.ECPrivateKey
 import java.security.interfaces.ECPublicKey
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -26,7 +29,10 @@ class DroplyJwtConfig {
     private lateinit var issuer: String
 
     interface JWTIssuer {
-        fun issue(payload: Map<String, Any?>): String
+        fun issue(
+            payload: Map<String, Any?>,
+            expiresAt: Instant = Instant.now().plus(30, ChronoUnit.DAYS)
+        ): String
     }
 
     @Bean
@@ -46,9 +52,13 @@ class DroplyJwtConfig {
     @Bean
     fun jwtIssuer(): JWTIssuer {
         return object : JWTIssuer {
-            override fun issue(payload: Map<String, Any?>) = JWT.create()
+            override fun issue(
+                payload: Map<String, Any?>,
+                expiresAt: Instant
+            ) = JWT.create()
                 .withIssuer(issuer)
                 .withPayload(payload)
+                .withExpiresAt(Date.from(expiresAt))
                 .sign(algorithm())
         }
     }

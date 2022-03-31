@@ -1,4 +1,4 @@
-package ru.droply.sprintor.config
+package ru.droply.config
 
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired

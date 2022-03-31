@@ -4,6 +4,8 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.exceptions.JWTCreationException
 import com.auth0.jwt.exceptions.JWTVerificationException
 import com.google.gson.Gson
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,9 +33,12 @@ class JwtService {
         }
     }
 
-    fun issueAuthToken(authPayload: AuthPayload): String? {
+    fun issueAuthToken(
+        authPayload: AuthPayload,
+        expiresAt: Instant = Instant.now().plus(30, ChronoUnit.DAYS)
+    ): String? {
         return try {
-            issuer.issue(asMap(authPayload))
+            issuer.issue(asMap(authPayload), expiresAt)
         } catch (exception: JWTCreationException) {
             exception.printStackTrace()
             return null

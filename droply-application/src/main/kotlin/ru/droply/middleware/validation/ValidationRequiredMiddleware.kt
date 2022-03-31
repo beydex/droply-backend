@@ -1,11 +1,12 @@
-package ru.droply.sprintor.middleware.validation
+package ru.droply.middleware.validation
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import javax.validation.ConstraintViolationException
 import javax.validation.Validator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import ru.droply.sprintor.middleware.AnnotationMiddleware
+import ru.droply.middleware.AnnotationMiddleware
+import ru.droply.sprintor.middleware.validation.ValidationRequired
 import ru.droply.sprintor.scene.Scene
 
 @Component

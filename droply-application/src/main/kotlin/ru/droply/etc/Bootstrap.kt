@@ -18,7 +18,8 @@ const val SPACE_FILLER = "::::::::::::::::::: "
 const val PROFILES_ANNOUNCER = "\uD83D\uDCC4 Profiles: %s"
 
 val PROFILES_DECORATIONS = mapOf(
-    "test" to "\uD83E\uDDEA Test profile"
+    "test" to "\uD83E\uDDEA Test profile",
+    "test-stand" to "\uD83D\uDC1E Test stand"
 )
 
 val RUN_DECORATIONS = mapOf(

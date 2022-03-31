@@ -52,7 +52,7 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
     private lateinit var authPayloadMapper: AuthPayloadMapper
 
     override fun DefaultWebSocketSession.handle(request: Request): Response {
-        if (ctx.auth != null) {
+        if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in, ${ctx.auth!!.user.name}")
         }
 

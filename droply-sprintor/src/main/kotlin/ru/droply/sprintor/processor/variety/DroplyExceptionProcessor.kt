@@ -4,18 +4,19 @@ import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import mu.KotlinLogging
 import org.springframework.stereotype.Component
 import ru.droply.sprintor.ktor.sendJson
-import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.DroplyErrorResponse
 import ru.droply.sprintor.processor.ExceptionHandlerContainer
-import ru.droply.sprintor.processor.exception.DroplyUnauthorizedException
+import ru.droply.sprintor.processor.exception.DroplyException
 
 @Component
 @ExceptionHandlerContainer
-class DroplyUnauthorizedExceptionProcessor {
+class DroplyExceptionProcessor {
     private val logger = KotlinLogging.logger {}
 
-    suspend fun process(exception: DroplyUnauthorizedException, session: DefaultWebSocketSession) {
-        logger.trace(exception) { "Unauthorized $session" }
-        session.outgoing.sendJson(DroplyErrorResponse(code = DroplyErrorCode.UNAUTHORIZED))
+    suspend fun process(exception: DroplyException, session: DefaultWebSocketSession) {
+        if (exception.message != null) {
+            logger.trace(exception) { "Exception message: ${exception.message}}" }
+        }
+        session.outgoing.sendJson(DroplyErrorResponse(code = exception.code))
     }
 }

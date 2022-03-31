@@ -65,8 +65,12 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
             scene.apply {
                 val actualRequest = Json.decodeFromString(serializer, requestContent.toString())
                 middlewareCollection.forEach {
-                    // Process before forward middleware scenarios
-                    it.beforeForward(scene, actualRequest, session)
+                    try {
+                        // Process before forward middleware scenarios
+                        it.beforeForward(scene, actualRequest, session)
+                    } catch (e: Exception) {
+                        exceptionProcessor.process(e, session)
+                    }
                 }
 
                 // Rollout actual scene
