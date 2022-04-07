@@ -7,6 +7,7 @@ val logbackVersion: String by project
 val googleApiClientVersion: String by project
 val javaJwtVersion: String by project
 val bcprovVersion: String by project
+val jacksonVersion: String by project
 
 plugins {
     application
@@ -40,6 +41,9 @@ dependencies {
 
     // DB stuff (with Spring Data & PostgreSQL)
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // Json
+    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
 }
 
 java {

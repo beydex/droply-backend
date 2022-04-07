@@ -10,7 +10,6 @@ import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.util.ReflectionTestUtils
 import ru.droply.config.DroplyTestAuthConfig
 import ru.droply.config.DroplyTestJpaConfig
-import ru.droply.config.DroplyTestJwtConfig
 import ru.droply.config.DroplyTestPartsConfig
 import ru.droply.service.DroplyUserService
 
@@ -18,7 +17,6 @@ import ru.droply.service.DroplyUserService
 @SpringBootTest(
     classes = [
         DroplyTestJpaConfig::class,
-        DroplyTestJwtConfig::class,
         DroplyTestPartsConfig::class,
         DroplyTestAuthConfig::class
     ]

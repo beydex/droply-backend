@@ -1,9 +1,10 @@
 package ru.droply.service
 
 import com.auth0.jwt.JWTVerifier
-import com.auth0.jwt.exceptions.JWTCreationException
 import com.auth0.jwt.exceptions.JWTVerificationException
-import com.google.gson.Gson
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.ObjectMapper
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -36,15 +37,14 @@ class JwtService {
     fun issueAuthToken(
         authPayload: AuthPayload,
         expiresAt: Instant = Instant.now().plus(30, ChronoUnit.DAYS)
-    ): String? {
-        return try {
-            issuer.issue(asMap(authPayload), expiresAt)
-        } catch (exception: JWTCreationException) {
-            exception.printStackTrace()
-            return null
-        }
-    }
+    ) = issuer.issue(asMap(authPayload), expiresAt)
 }
 
-fun asMap(value: Any): Map<String, Any?> =
-    Gson().run { fromJson<Map<String, Any?>>(toJson(value), MutableMap::class.java) }
+fun asMap(value: Any): Map<String, Any?> {
+    val mapper = ObjectMapper()
+        .setSerializationInclusion(JsonInclude.Include.NON_NULL)
+
+    return mapper.readValue<Map<String, Any>>(
+        mapper.writeValueAsString(value),
+        object : TypeReference<Map<String, Any>>() {})
+}

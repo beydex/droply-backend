@@ -11,12 +11,10 @@ import java.util.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Profile
 import ru.droply.service.util.PemUtils
 
 private const val JWT_SIGN_ALGORITHM: String = "EC"
 
-@Profile("!test")
 @Configuration
 class DroplyJwtConfig {
     @Value("\${droply.security.keys.public}")
