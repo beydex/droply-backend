@@ -7,6 +7,7 @@ val logbackVersion: String by project
 val googleApiClientVersion: String by project
 val javaJwtVersion: String by project
 val bcprovVersion: String by project
+val mapstructVersion: String by project
 
 plugins {
     application
@@ -14,6 +15,7 @@ plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
     kotlin("plugin.spring")
+    kotlin("kapt")
 
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
@@ -32,6 +34,10 @@ dependencies {
     // Ktor
     implementation("io.ktor:ktor-websockets:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
+
+    // MapStruct
+    implementation("org.mapstruct:mapstruct:$mapstructVersion")
+    kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
 
     // Google Auth
     implementation("com.google.api-client:google-api-client:$googleApiClientVersion")

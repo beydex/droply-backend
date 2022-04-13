@@ -36,4 +36,7 @@ droply:
 
 logging:
   level:
-    root: "TRACE"
+    root: "INFO"
+    org.hibernate:
+      SQL: "DEBUG"
+      type.descriptor.sql.BasicBinder: "DEBUG"

@@ -73,6 +73,28 @@ fun <T> DroplyTest.useAuthUser(
     return result
 }
 
+fun <T> DroplyTest.useAuthUser(
+    user: DroplyUser = makeUser(),
+    provider: AuthProvider? = null,
+    action: (DroplyUser) -> T
+): T {
+    val previousAuth = context.auth
+    val currentAuth = Auth(
+        provider = provider ?: AuthProvider.CUSTOM,
+        user = user
+    )
+
+    val result: T
+    try {
+        context.auth = currentAuth
+        result = action(user)
+    } finally {
+        context.auth = previousAuth
+    }
+
+    return result
+}
+
 fun DroplyTest.makeUser(
     username: String? = null,
     email: String? = null

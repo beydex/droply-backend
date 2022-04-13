@@ -11,6 +11,16 @@ interface UserDao : BaseDao<Long, DroplyUser> {
 
     fun findByUrid(urid: Int): DroplyUser?
 
+    @Query(
+        """
+        SELECT u
+        FROM DroplyUser u
+        LEFT JOIN FETCH u.contacts
+        WHERE u.id = (:id)
+        """
+    )
+    fun findByIdAndFetchContacts(@Param("id") id: Long): DroplyUser?
+
     @Modifying
     @Query(
         """

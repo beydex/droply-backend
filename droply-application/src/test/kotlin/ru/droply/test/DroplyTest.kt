@@ -11,6 +11,7 @@ import org.springframework.test.util.ReflectionTestUtils
 import ru.droply.config.DroplyTestAuthConfig
 import ru.droply.config.DroplyTestJpaConfig
 import ru.droply.config.DroplyTestPartsConfig
+import ru.droply.service.DroplyContactService
 import ru.droply.service.DroplyUserService
 
 @ActiveProfiles("test")
@@ -25,6 +26,9 @@ import ru.droply.service.DroplyUserService
 class DroplyTest {
     @Autowired
     lateinit var userService: DroplyUserService
+
+    @Autowired
+    lateinit var contactService: DroplyContactService
 
     @Autowired
     lateinit var context: TestContext

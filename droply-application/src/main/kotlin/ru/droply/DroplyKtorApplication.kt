@@ -9,6 +9,7 @@ import io.ktor.http.cio.websocket.timeout
 import io.ktor.routing.routing
 import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
+import java.lang.reflect.UndeclaredThrowableException
 import java.time.Duration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -64,21 +65,19 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
 
             scene.apply {
                 val actualRequest = Json.decodeFromString(serializer, requestContent.toString())
-                middlewareCollection.forEach {
-                    try {
-                        // Process before forward middleware scenarios
-                        it.beforeForward(scene, actualRequest, session)
-                    } catch (e: Exception) {
-                        exceptionProcessor.process(e, session)
-                    }
+                for (droplyMiddleware in middlewareCollection) {
+                    // Process before forward middleware scenarios
+                    droplyMiddleware.beforeForward(scene, actualRequest, session)
                 }
 
                 // Rollout actual scene
                 rollout(actualRequest)
             }
         } catch (e: Exception) {
-            logger.trace(e) { "Scene handler error: $e" }
+            logger.debug(e) { "Scene error: $e" }
             exceptionProcessor.process(e, session)
+        } catch (undeclared: UndeclaredThrowableException) {
+            exceptionProcessor.process(undeclared, session)
         }
     }
 }

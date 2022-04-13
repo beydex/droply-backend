@@ -75,4 +75,7 @@ class DroplyUserService {
 
         return user
     }
+
+    @Transactional(readOnly = true)
+    fun findByIdAndFetchContacts(id: Long) = userDao.findByIdAndFetchContacts(id)
 }

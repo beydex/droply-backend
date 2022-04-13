@@ -9,5 +9,8 @@ databaseChangeLog:
       file: variety/18-03-2022-1-add-urid-field.sql
       relativeToChangelogFile: true
   - include:
+      file: variety/03-04-2022-1-add-contact-table.yml
+      relativeToChangelogFile: true
+  - include:
       file: variety/07-04-2022-1-fix-make_random_code-function.sql
       relativeToChangelogFile: true

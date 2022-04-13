@@ -67,7 +67,7 @@ class AuthSceneTest : DroplyTest() {
         val user = makeUser().apply { urid = 1213 }
         val token = jwtService.issueAuthToken(authPayloadMapper.map(Auth(AuthProvider.CUSTOM, user)))
 
-        socketIncoming(makeRequest("auth", AuthInDto(token!!))) {
+        socketIncoming(makeRequest("auth", AuthInDto(token))) {
             assertReceive<AuthOutDto>(it).apply {
                 assert(success)
             }
