@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.data.common.auth.AuthProvider
-import ru.droply.data.common.dto.DroplyUserOutDto
 import ru.droply.data.entity.DroplyUser
 import ru.droply.data.mapper.AuthPayloadMapper
 import ru.droply.data.mapper.DroplyUserMapper
@@ -16,6 +15,7 @@ import ru.droply.scenes.endpoint.auth.AuthInDto
 import ru.droply.scenes.endpoint.auth.AuthOutDto
 import ru.droply.scenes.endpoint.auth.AuthScene
 import ru.droply.scenes.endpoint.code.DroplyCodeOutDto
+import ru.droply.scenes.endpoint.profile.ProfileOutDto
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
 import ru.droply.test.DroplyTest
@@ -88,8 +88,8 @@ class AuthSceneTest : DroplyTest() {
                 }
             }
             socketIncoming(makeRequest("profile")) {
-                assertReceive<DroplyUserOutDto>(it).apply {
-                    assertEquals(urid, newCode)
+                assertReceive<ProfileOutDto>(it).apply {
+                    assertEquals(user.urid, newCode)
                 }
             }
         }

@@ -1,7 +1,7 @@
 package ru.droply.scene.profile
 
 import org.junit.jupiter.api.Test
-import ru.droply.data.common.dto.DroplyUserOutDto
+import ru.droply.scenes.endpoint.profile.ProfileOutDto
 import ru.droply.test.DroplyTest
 import ru.droply.test.assertReceive
 import ru.droply.test.makeRequest
@@ -15,8 +15,8 @@ class ProfileSceneTest: DroplyTest() {
     fun `call profile with auth success`() {
         useAuthUser { user ->
             socketIncoming(makeRequest("profile")) {
-                val result = assertReceive<DroplyUserOutDto>(it)
-                assertEquals(user.urid, result.urid)
+                val result = assertReceive<ProfileOutDto>(it)
+                assertEquals(user.urid, result.user.urid)
             }
         }
     }
