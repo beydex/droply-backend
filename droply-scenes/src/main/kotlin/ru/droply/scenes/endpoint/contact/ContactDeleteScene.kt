@@ -36,7 +36,7 @@ class ContactDeleteScene : RestScene<ContactDeleteInDto, ContactListOutDto>(
             ?: throw DroplyException(code = DroplyErrorCode.UNAUTHORIZED)
 
         val contactUser = userService.findById(request.id)
-            ?: throw DroplyException(code = DroplyErrorCode.BAD_REQUEST)
+            ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
 
         val contact = contactService.getContact(user, contactUser)
             ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)

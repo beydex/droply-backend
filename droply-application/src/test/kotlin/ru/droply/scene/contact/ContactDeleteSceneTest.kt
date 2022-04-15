@@ -54,7 +54,7 @@ class ContactDeleteSceneTest : DroplyTest() {
             socketIncoming(makeRequest("contact/delete", ContactDeleteInDto(id = -1))) {
                 assertReceive<DroplyErrorResponse>(it).apply {
                     assert(!success)
-                    assertEquals(DroplyErrorCode.BAD_REQUEST, code)
+                    assertEquals(DroplyErrorCode.NOT_FOUND, code)
                 }
             }
         }
