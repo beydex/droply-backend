@@ -42,6 +42,7 @@ class ContactDeleteScene : RestScene<ContactDeleteInDto, ContactListOutDto>(
             ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
 
         user.contacts.remove(contact)
+        contactService.remove(contact)
         return ContactListOutDto(success = true, entries = user.contacts.map(contactMapper::map))
     }
 }
