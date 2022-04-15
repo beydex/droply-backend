@@ -34,7 +34,6 @@ class CodeFindSceneTest : DroplyTest() {
             assertReceive<DroplyCodeFindOutDto>(it).apply {
                 assert(success)
                 assertEquals(code, user.urid)
-                assertEquals(source.email, user.email)
                 assertEquals(source.name, user.name)
             }
         }

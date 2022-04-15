@@ -3,7 +3,7 @@ package ru.droply.scenes.endpoint.code
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
-import ru.droply.data.common.dto.DroplyUserOutDto
+import ru.droply.data.common.dto.DroplyUserGeneralOutDto
 import ru.droply.data.mapper.DroplyUserMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.processor.DroplyErrorCode
@@ -15,7 +15,7 @@ import ru.droply.sprintor.scene.variety.RestScene
 data class DroplyCodeFindInDto(val code: Int)
 
 @Serializable
-data class DroplyCodeFindOutDto(val success: Boolean, val user: DroplyUserOutDto)
+data class DroplyCodeFindOutDto(val success: Boolean, val user: DroplyUserGeneralOutDto)
 
 @DroplyScene("code/find")
 class CodeFindScene : RestScene<DroplyCodeFindInDto, DroplyCodeFindOutDto>(
@@ -34,7 +34,7 @@ class CodeFindScene : RestScene<DroplyCodeFindInDto, DroplyCodeFindOutDto>(
 
         return DroplyCodeFindOutDto(
             success = true,
-            user = userMapper.map(user)
+            user = userMapper.mapToGeneral(user)
         )
     }
 }
