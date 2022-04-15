@@ -5,12 +5,14 @@ import java.time.Instant
 import java.time.temporal.ChronoUnit
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Profile
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.mapper.AuthPayloadMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
+import ru.droply.sprintor.event.UserAuthorizeEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
@@ -36,6 +38,9 @@ class LogMeInScene : RestScene<Request, Response>(Request.serializer(), Response
     @Autowired
     private lateinit var authMapper: AuthPayloadMapper
 
+    @Autowired
+    private lateinit var eventPublisher: ApplicationEventPublisher
+
     override fun DefaultWebSocketSession.handle(request: Request): Response {
         val user = userService.findByEmail(request.email) ?: userService.makeUser(
             name = request.email.split("@")[0],
@@ -50,10 +55,12 @@ class LogMeInScene : RestScene<Request, Response>(Request.serializer(), Response
             expiresAt = Instant.now().plus(1, ChronoUnit.HOURS)
         )
 
+        eventPublisher.publishEvent(UserAuthorizeEvent(user, this))
+
         return Response(
             success = true,
             userId = user.id!!,
-            token = token!!
+            token = token
         )
     }
 }

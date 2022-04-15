@@ -14,6 +14,9 @@ import java.time.Duration
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
+import org.springframework.context.ApplicationEventPublisher
+import ru.droply.sprintor.event.UserLogoutEvent
+import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.ktor.retrieveText
 import ru.droply.sprintor.middleware.DroplyMiddleware
 import ru.droply.sprintor.processor.DroplyErrorCode
@@ -23,6 +26,7 @@ import ru.droply.sprintor.scene.Scene
 import ru.droply.sprintor.scene.SceneManager
 import ru.droply.sprintor.scene.SceneRequest
 import ru.droply.sprintor.spring.autowired
+import ru.droply.sprintor.spring.context
 
 private val sceneManager: SceneManager by autowired()
 private val sceneMap: Map<String, Scene<*>> by autowired("sceneMap")
@@ -32,6 +36,8 @@ private val middlewareCollection: Collection<DroplyMiddleware> by autowired("mid
 private val exceptionProcessor: ExceptionProcessor by autowired()
 
 private val logger = KotlinLogging.logger {}
+
+private val eventPublisher: ApplicationEventPublisher by context()
 
 fun Application.configureSockets() {
     install(WebSockets) {
@@ -79,5 +85,10 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
         } catch (undeclared: UndeclaredThrowableException) {
             exceptionProcessor.process(undeclared, session)
         }
+    }
+
+    // Send an event once we have finished serving an authorized user
+    if (ctx.auth != null) {
+        eventPublisher.publishEvent(UserLogoutEvent(ctx.auth!!.user))
     }
 }

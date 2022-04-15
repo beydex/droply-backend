@@ -5,11 +5,13 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.mapper.AuthPayloadMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
+import ru.droply.sprintor.event.UserAuthorizeEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
@@ -51,6 +53,9 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
     @Autowired
     private lateinit var authPayloadMapper: AuthPayloadMapper
 
+    @Autowired
+    private lateinit var eventPublisher: ApplicationEventPublisher
+
     override fun DefaultWebSocketSession.handle(request: Request): Response {
         if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in, ${ctx.auth!!.user.name}")
@@ -72,20 +77,20 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
         }
 
         // Check if there is already a user with provided email
-        var endpoint = userService.findByEmail(email)
-        if (endpoint == null) {
-            endpoint = userService.makeUser(
+        var droplyUser = userService.findByEmail(email)
+        if (droplyUser == null) {
+            droplyUser = userService.makeUser(
                 name = payload.name ?: email.split("@")[0],
                 email = email,
                 avatarUrl = if ("picture" in payload) payload["picture"] as String else null
             )
         }
 
-        val auth = Auth(AuthProvider.GOOGLE, endpoint)
+        val auth = Auth(AuthProvider.GOOGLE, droplyUser)
         val token = jwtService.issueAuthToken(authPayloadMapper.map(auth))
-            ?: return Failure("Failed to issue token")
 
         ctx.auth = auth
+        eventPublisher.publishEvent(UserAuthorizeEvent(droplyUser, this))
 
         return Success("Welcome to Droply, ${auth.user.name}", token)
     }

@@ -4,6 +4,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.ConfigurableApplicationContext
+import org.springframework.context.event.ApplicationEventMulticaster
 import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.context.event.EventListener
 import org.springframework.test.context.ActiveProfiles
@@ -29,6 +31,12 @@ class DroplyTest {
 
     @Autowired
     lateinit var contactService: DroplyContactService
+
+    @Autowired
+    lateinit var applicationContext: ConfigurableApplicationContext
+
+    @Autowired
+    lateinit var applicationEventMulticaster: ApplicationEventMulticaster
 
     @Autowired
     lateinit var context: TestContext

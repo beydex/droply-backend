@@ -3,9 +3,11 @@ package ru.droply.scenes.endpoint.auth
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import ru.droply.data.common.auth.Auth
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
+import ru.droply.sprintor.event.UserAuthorizeEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
@@ -41,6 +43,9 @@ class AuthScene : RestScene<Request, Response>(Request.serializer(), Response.se
     @Autowired
     private lateinit var userService: DroplyUserService
 
+    @Autowired
+    private lateinit var eventPublisher: ApplicationEventPublisher
+
     override fun DefaultWebSocketSession.handle(request: Request): Response {
         if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in")
@@ -52,6 +57,7 @@ class AuthScene : RestScene<Request, Response>(Request.serializer(), Response.se
             ?: return Failure("Unknown account")
 
         ctx.auth = Auth(authPayload.provider, user)
+        eventPublisher.publishEvent(UserAuthorizeEvent(user, this))
 
         return Success("Authed in ${ctx.auth!!.user.name}")
     }
