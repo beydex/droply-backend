@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
-import ru.droply.sprintor.middleware.DroplyMiddleware
+import ru.droply.middleware.DroplyMiddleware
 
 @Configuration
 @ComponentScan("ru.droply.sprintor.middleware")

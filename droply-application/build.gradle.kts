@@ -51,6 +51,7 @@ dependencies {
     implementation(project(":droply-data"))
     implementation(project(":droply-service"))
     implementation(project(":droply-scenes"))
+    implementation(project(":droply-mapper"))
 
     // Ktor
     implementation("io.ktor:ktor-websockets:$ktorVersion")

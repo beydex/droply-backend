@@ -3,8 +3,8 @@ package ru.droply.scenes.endpoint.code
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
-import ru.droply.data.common.dto.DroplyUserGeneralOutDto
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.data.common.dto.user.DroplyUserGeneralOutDto
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.exception.DroplyException

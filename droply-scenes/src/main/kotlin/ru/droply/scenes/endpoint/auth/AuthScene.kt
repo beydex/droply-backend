@@ -7,7 +7,8 @@ import org.springframework.context.ApplicationEventPublisher
 import ru.droply.data.common.auth.Auth
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
-import ru.droply.sprintor.event.UserAuthorizeEvent
+import ru.droply.service.extensions.auth
+import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
@@ -56,8 +57,8 @@ class AuthScene : RestScene<Request, Response>(Request.serializer(), Response.se
         val user = userService.findByEmail(authPayload.user.email)
             ?: return Failure("Unknown account")
 
+        eventPublisher.publishEvent(UserLoginEvent(user, this))
         ctx.auth = Auth(authPayload.provider, user)
-        eventPublisher.publishEvent(UserAuthorizeEvent(user, this))
 
         return Success("Authed in ${ctx.auth!!.user.name}")
     }

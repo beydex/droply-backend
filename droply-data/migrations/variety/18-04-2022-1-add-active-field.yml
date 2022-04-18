@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1650300808486-1
+      author: theseems (generated)
+      changes:
+        - addColumn:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  defaultValueBoolean: false
+                  name: active
+                  type: boolean
+            tableName: droply_request

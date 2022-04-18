@@ -1,9 +1,8 @@
 package ru.droply.test
 
-import java.time.ZonedDateTime
 import ru.droply.data.entity.DroplyContact
 import ru.droply.data.entity.DroplyUser
-
+import java.time.ZonedDateTime
 
 fun DroplyTest.makeContact(
     owner: DroplyUser = makeUser(),

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
 import ru.droply.middleware.AnnotationMiddleware
 import ru.droply.service.DroplyUserService
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.middleware.security.AuthRequired
 import ru.droply.sprintor.processor.DroplyErrorCode

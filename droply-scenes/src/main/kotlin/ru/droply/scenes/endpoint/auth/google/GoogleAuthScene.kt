@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
-import ru.droply.data.mapper.AuthPayloadMapper
+import ru.droply.mapper.AuthPayloadMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
-import ru.droply.sprintor.event.UserAuthorizeEvent
+import ru.droply.service.extensions.auth
+import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
@@ -90,7 +91,7 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
         val token = jwtService.issueAuthToken(authPayloadMapper.map(auth))
 
         ctx.auth = auth
-        eventPublisher.publishEvent(UserAuthorizeEvent(droplyUser, this))
+        eventPublisher.publishEvent(UserLoginEvent(droplyUser, this))
 
         return Success("Welcome to Droply, ${auth.user.name}", token)
     }

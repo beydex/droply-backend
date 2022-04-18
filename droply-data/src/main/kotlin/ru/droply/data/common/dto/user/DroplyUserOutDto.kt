@@ -1,4 +1,4 @@
-package ru.droply.data.common.dto
+package ru.droply.data.common.dto.user
 
 import kotlinx.serialization.Serializable
 

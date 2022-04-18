@@ -2,7 +2,7 @@ package ru.droply.scene.auth
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.scenes.endpoint.auth.WhoamiOutDto
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.DroplyErrorResponse
@@ -20,12 +20,12 @@ class WhoamiSceneTest : DroplyTest() {
 
     @Test
     fun `call scene with no auth failure`() {
-       socketIncoming(makeRequest("auth/whoami")) {
-           assertReceive<DroplyErrorResponse>(it).apply {
-               assert(!success)
-               assertEquals(DroplyErrorCode.UNAUTHORIZED, code)
-           }
-       }
+        socketIncoming(makeRequest("auth/whoami")) {
+            assertReceive<DroplyErrorResponse>(it).apply {
+                assert(!success)
+                assertEquals(DroplyErrorCode.UNAUTHORIZED, code)
+            }
+        }
     }
 
     @Test

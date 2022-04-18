@@ -1,4 +1,4 @@
-package ru.droply.sprintor.middleware
+package ru.droply.middleware
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import ru.droply.sprintor.scene.Scene

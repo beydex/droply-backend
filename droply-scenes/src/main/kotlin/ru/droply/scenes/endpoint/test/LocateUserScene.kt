@@ -4,8 +4,8 @@ import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
-import ru.droply.data.common.dto.DroplyUserContactOutDto
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.data.common.dto.user.DroplyUserContactOutDto
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.connector.DroplyLocator
 import ru.droply.sprintor.ktor.ctx

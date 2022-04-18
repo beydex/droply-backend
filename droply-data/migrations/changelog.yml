@@ -14,3 +14,9 @@ databaseChangeLog:
   - include:
       file: variety/07-04-2022-1-fix-make_random_code-function.sql
       relativeToChangelogFile: true
+  - include:
+      file: variety/16-04-2022-1-add-request-table.yml
+      relativeToChangelogFile: true
+  - include:
+      file: variety/18-04-2022-1-add-active-field.yml
+      relativeToChangelogFile: true

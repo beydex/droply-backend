@@ -1,12 +1,12 @@
 package ru.droply.service
 
-import java.time.ZonedDateTime
 import org.junit.jupiter.api.Test
 import org.springframework.transaction.annotation.Transactional
 import ru.droply.data.entity.DroplyContact
 import ru.droply.test.DroplyTest
 import ru.droply.test.makeContact
 import ru.droply.test.makeUser
+import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 
 @Transactional

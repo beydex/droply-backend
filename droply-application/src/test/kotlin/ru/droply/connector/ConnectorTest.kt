@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.data.common.auth.AuthProvider
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.scenes.endpoint.auth.AuthInDto
 import ru.droply.scenes.endpoint.auth.AuthOutDto
 import ru.droply.service.JwtService

@@ -21,12 +21,44 @@ interface UserDao : BaseDao<Long, DroplyUser> {
     )
     fun findByIdAndFetchContacts(@Param("id") id: Long): DroplyUser?
 
+    @Query(
+        """
+        SELECT u
+        FROM DroplyUser u
+        LEFT JOIN FETCH u.incomingRequests
+        WHERE u.id = (:id)
+        """
+    )
+    fun findByIdAndFetchIncomingRequests(@Param("id") id: Long): DroplyUser?
+
+    @Query(
+        """
+        SELECT u
+        FROM DroplyUser u
+        LEFT JOIN FETCH u.outgoingRequests
+        WHERE u.id = (:id)
+        """
+    )
+    fun findByIdAndFetchOutgoingRequests(@Param("id") id: Long): DroplyUser?
+
+    @Query(
+        """
+        SELECT DISTINCT u
+        FROM DroplyUser u
+        LEFT JOIN FETCH u.incomingRequests
+        LEFT JOIN FETCH u.outgoingRequests
+        WHERE u.id = (:id)
+        """
+    )
+    fun findByIdAndFetchRequests(@Param("id") id: Long): DroplyUser?
+
     @Modifying
     @Query(
         """
         LOCK TABLE droply_user_id_urid IN ACCESS EXCLUSIVE MODE;
         CALL make_random_code(:userId)
-        """, nativeQuery = true
+        """,
+        nativeQuery = true
     )
     fun updateUserUrid(@Param("userId") userId: Long)
 }

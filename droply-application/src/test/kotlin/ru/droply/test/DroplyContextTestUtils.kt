@@ -3,6 +3,7 @@ package ru.droply.test
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.entity.DroplyUser
+import ru.droply.service.extensions.auth
 
 fun DroplyTest.useAuth(username: String? = null, email: String? = null, provider: AuthProvider? = null) {
     context.auth = Auth(

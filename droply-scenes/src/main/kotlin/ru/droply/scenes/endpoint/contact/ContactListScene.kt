@@ -1,25 +1,16 @@
 package ru.droply.scenes.endpoint.contact
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import java.time.ZonedDateTime
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
-import ru.droply.data.common.dto.DroplyUserContactOutDto
-import ru.droply.scenes.endpoint.mapper.DroplyContactMapper
+import ru.droply.data.common.dto.contact.ContactEntryOutDto
+import ru.droply.mapper.DroplyContactMapper
 import ru.droply.service.DroplyUserService
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.middleware.security.AuthRequired
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.OutRestScene
-import ru.droply.sprintor.serializer.KZonedDateTimeSerializer
-
-@Serializable
-data class ContactEntryOutDto(
-    val user: DroplyUserContactOutDto,
-
-    @Serializable(KZonedDateTimeSerializer::class)
-    val lastSuccessRequestDate: ZonedDateTime
-)
 
 @Serializable
 data class ContactListOutDto(val success: Boolean, val entries: List<ContactEntryOutDto>)
@@ -40,5 +31,4 @@ class GetContactListScene : OutRestScene<ContactListOutDto>(ContactListOutDto.se
 
         return ContactListOutDto(success = true, entries)
     }
-
 }

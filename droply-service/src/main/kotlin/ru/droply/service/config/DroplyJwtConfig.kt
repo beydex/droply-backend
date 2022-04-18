@@ -3,15 +3,15 @@ package ru.droply.service.config
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import ru.droply.service.util.PemUtils
 import java.security.interfaces.ECPrivateKey
 import java.security.interfaces.ECPublicKey
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.*
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-import ru.droply.service.util.PemUtils
 
 private const val JWT_SIGN_ALGORITHM: String = "EC"
 

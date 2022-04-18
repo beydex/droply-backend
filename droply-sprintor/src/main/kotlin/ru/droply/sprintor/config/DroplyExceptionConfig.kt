@@ -1,7 +1,6 @@
 package ru.droply.sprintor.config
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import java.util.stream.Collectors
 import mu.KotlinLogging
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationContext
@@ -11,6 +10,7 @@ import org.springframework.context.annotation.Configuration
 import ru.droply.sprintor.processor.ExceptionHandlerContainer
 import ru.droply.sprintor.processor.ExceptionProcessor
 import ru.droply.sprintor.processor.HashAndHierarchyExceptionProcessor
+import java.util.stream.Collectors
 import kotlin.reflect.KClass
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubtypeOf
@@ -32,8 +32,8 @@ class DroplyExceptionConfig {
 
             container::class.memberFunctions.filter { function ->
                 function.parameters.size == 3 &&
-                        function.parameters[1].type.isSubtypeOf(Exception::class.createType()) &&
-                        function.parameters[2].type.isSubtypeOf(DefaultWebSocketSession::class.createType())
+                    function.parameters[1].type.isSubtypeOf(Exception::class.createType()) &&
+                    function.parameters[2].type.isSubtypeOf(DefaultWebSocketSession::class.createType())
             }.forEach { function ->
                 @Suppress("UNCHECKED_CAST")
                 val exceptionClass = function.parameters[1].type.classifier as KClass<out Exception>

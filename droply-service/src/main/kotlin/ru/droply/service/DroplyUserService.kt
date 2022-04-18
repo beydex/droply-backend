@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.droply.data.dao.UserDao
 import ru.droply.data.entity.DroplyUser
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.context.Context
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.exception.DroplyException
@@ -78,4 +79,10 @@ class DroplyUserService {
 
     @Transactional(readOnly = true)
     fun findByIdAndFetchContacts(id: Long) = userDao.findByIdAndFetchContacts(id)
+
+    @Transactional(readOnly = true)
+    fun findByIdAndFetchIncomingRequests(id: Long) = userDao.findByIdAndFetchIncomingRequests(id)
+
+    @Transactional(readOnly = true)
+    fun findByIdAndFetchOutgoingRequests(id: Long) = userDao.findByIdAndFetchOutgoingRequests(id)
 }

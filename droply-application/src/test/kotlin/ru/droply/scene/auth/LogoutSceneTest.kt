@@ -2,6 +2,7 @@ package ru.droply.scene.auth
 
 import org.junit.jupiter.api.Test
 import ru.droply.scenes.endpoint.auth.LogoutSceneOutDto
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.DroplyErrorResponse
 import ru.droply.test.DroplyTest

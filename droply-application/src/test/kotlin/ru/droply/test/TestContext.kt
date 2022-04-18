@@ -5,7 +5,6 @@ import ru.droply.sprintor.context.MemoryContext
 class TestContext : MemoryContext() {
     fun clear() {
         map.clear()
-        auth = null
     }
 
     override fun toString(): String {

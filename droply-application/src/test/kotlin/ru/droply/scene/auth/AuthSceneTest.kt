@@ -9,8 +9,8 @@ import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.data.common.auth.AuthProvider
 import ru.droply.data.entity.DroplyUser
-import ru.droply.data.mapper.AuthPayloadMapper
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.mapper.AuthPayloadMapper
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.scenes.endpoint.auth.AuthInDto
 import ru.droply.scenes.endpoint.auth.AuthOutDto
 import ru.droply.scenes.endpoint.auth.AuthScene

@@ -1,5 +1,6 @@
 package ru.droply.data.entity
 
+import ru.droply.data.entity.base.BaseEntity
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -7,7 +8,6 @@ import javax.persistence.FetchType
 import javax.persistence.OneToMany
 import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.SecondaryTable
-import ru.droply.data.entity.base.BaseEntity
 
 @Entity
 @SecondaryTable(
@@ -32,5 +32,20 @@ class DroplyUser(
         fetch = FetchType.LAZY,
         mappedBy = "owner"
     )
-    val contacts: MutableList<DroplyContact> = mutableListOf()
+    val contacts: MutableList<DroplyContact> = mutableListOf(),
+
+    @field:OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "receiver"
+    )
+    val incomingRequests: MutableSet<DroplyRequest> = mutableSetOf(),
+
+    @field:OneToMany(
+        cascade = [CascadeType.ALL],
+        fetch = FetchType.LAZY,
+        mappedBy = "sender"
+    )
+    val outgoingRequests: MutableSet<DroplyRequest> = mutableSetOf(),
+
 ) : BaseEntity<Long>()

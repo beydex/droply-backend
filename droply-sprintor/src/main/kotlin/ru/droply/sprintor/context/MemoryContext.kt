@@ -1,9 +1,6 @@
 package ru.droply.sprintor.context
 
-import ru.droply.data.common.auth.Auth
-
 open class MemoryContext : Context {
-    override var auth: Auth? = null
     val map: MutableMap<String, Any> = HashMap()
 
     override fun get(key: String): Any? {
@@ -11,10 +8,6 @@ open class MemoryContext : Context {
     }
 
     override fun set(key: String, value: Any?) {
-        if (key == "auth" && value is Auth) {
-            auth = value
-            return
-        }
 
         if (value == null) {
             map.remove(key)
@@ -30,6 +23,6 @@ open class MemoryContext : Context {
     }
 
     override fun toString(): String {
-        return "MemoryContext(map=$map, auth=$auth)"
+        return "MemoryContext(map=$map)"
     }
 }

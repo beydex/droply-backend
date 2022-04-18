@@ -19,7 +19,7 @@ class HashAndHierarchyExceptionProcessor : ExceptionProcessor {
             }
 
             currentNode = currentNode.superclasses.find { it.isSubclassOf(Exception::class) }
-                    as? KClass<out Exception>
+                as? KClass<out Exception>
                 ?: break
         } while (currentNode.superclasses.isNotEmpty())
     }

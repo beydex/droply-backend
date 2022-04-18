@@ -14,7 +14,6 @@ plugins {
     kotlin("plugin.serialization")
     kotlin("plugin.spring")
     kotlin("plugin.jpa")
-    kotlin("kapt")
 
     id("org.springframework.boot") version "2.2.7.RELEASE"
     id("io.spring.dependency-management") version "1.0.9.RELEASE"
@@ -29,10 +28,10 @@ repositories {
  */
 val liquibase = mutableMapOf(
     "referenceUrl" to
-            "hibernate:spring:ru.droply.data.entity" +
-            "?dialect=org.hibernate.dialect.PostgreSQL10Dialect" +
-            "&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy" +
-            "&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy",
+        "hibernate:spring:ru.droply.data.entity" +
+        "?dialect=org.hibernate.dialect.PostgreSQL10Dialect" +
+        "&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy" +
+        "&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy",
     "mainChangeLog" to "migrations/changelog.yml",
     "newChangeLog" to "migrations/generated.yml",
     "referenceDriver" to "liquibase.ext.hibernate.database.connection.HibernateDriver",
@@ -58,10 +57,6 @@ dependencies {
     // Migrations
     implementation("org.liquibase.ext:liquibase-hibernate5:$liquibaseVersion")
     implementation("org.liquibase:liquibase-core:$liquibaseVersion")
-
-    // MapStruct
-    implementation("org.mapstruct:mapstruct:$mapstructVersion")
-    kapt("org.mapstruct:mapstruct-processor:$mapstructVersion")
 }
 
 java {

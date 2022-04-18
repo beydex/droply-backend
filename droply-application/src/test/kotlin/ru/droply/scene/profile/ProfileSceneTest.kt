@@ -9,7 +9,7 @@ import ru.droply.test.socketIncoming
 import ru.droply.test.useAuthUser
 import kotlin.test.assertEquals
 
-class ProfileSceneTest: DroplyTest() {
+class ProfileSceneTest : DroplyTest() {
 
     @Test
     fun `call profile with auth success`() {
@@ -20,5 +20,4 @@ class ProfileSceneTest: DroplyTest() {
             }
         }
     }
-
 }

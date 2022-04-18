@@ -15,7 +15,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 
-class CodeRefreshSceneTest: DroplyTest() {
+class CodeRefreshSceneTest : DroplyTest() {
     @Test
     fun `call scene with no auth failure`() {
         socketIncoming(makeRequest("code/refresh")) {

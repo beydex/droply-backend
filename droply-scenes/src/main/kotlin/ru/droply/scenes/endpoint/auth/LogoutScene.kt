@@ -4,6 +4,7 @@ import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.event.UserLogoutEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.middleware.security.AuthRequired

@@ -4,12 +4,13 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.data.common.auth.AuthProvider
-import ru.droply.data.mapper.DroplyUserMapper
+import ru.droply.mapper.DroplyUserMapper
 import ru.droply.scenes.endpoint.auth.AuthInDto
 import ru.droply.scenes.endpoint.auth.AuthOutDto
 import ru.droply.scenes.endpoint.auth.LogoutSceneOutDto
 import ru.droply.service.JwtService
-import ru.droply.sprintor.event.UserAuthorizeEvent
+import ru.droply.service.extensions.auth
+import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.event.UserLogoutEvent
 import ru.droply.test.DroplyTest
 import ru.droply.test.assertReceive
@@ -32,7 +33,7 @@ class UserAuthEventTest : DroplyTest() {
         val user = makeUser()
         val token = jwtService.issueAuthToken(AuthPayload(AuthProvider.CUSTOM, userMapper.map(user)))
 
-        val event = listenFor<UserAuthorizeEvent> {
+        val event = listenFor<UserLoginEvent> {
             socketIncoming(makeRequest("auth", AuthInDto(token))) {
                 assertReceive<AuthOutDto>(it).apply { assert(success) }
             }

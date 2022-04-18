@@ -1,0 +1,93 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1650127413168-1
+      author: theseems (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: droply_requestPK
+                  name: id
+                  type: BIGINT
+              - column:
+                  name: creation_time
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  constraints:
+                    nullable: false
+                  name: offer
+                  type: VARCHAR(2048)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: receiver_user_id
+                  type: BIGINT
+              - column:
+                  constraints:
+                    nullable: false
+                  name: sender_user_id
+                  type: BIGINT
+            tableName: droply_request
+  - changeSet:
+      id: 1650127413168-2
+      author: theseems (generated)
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  constraints:
+                    nullable: false
+                  name: request_id
+                  type: BIGINT
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+              - column:
+                  constraints:
+                    nullable: false
+                  name: size
+                  type: BIGINT
+            tableName: droply_request_file
+  - changeSet:
+      id: 1650127413168-3
+      author: theseems (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: sender_user_id
+            baseTableName: droply_request
+            constraintName: FK7ifqhimtm0qdu124wd0lnibwm
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: droply_user
+            validate: true
+  - changeSet:
+      id: 1650127413168-4
+      author: theseems (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: request_id
+            baseTableName: droply_request_file
+            constraintName: FKdup5uw218r29ab7auexfy1b1a
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: droply_request
+            validate: true
+  - changeSet:
+      id: 1650127413168-5
+      author: theseems (generated)
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: receiver_user_id
+            baseTableName: droply_request
+            constraintName: FKphdtj02bc8rffdblrnn8uwrj7
+            deferrable: false
+            initiallyDeferred: false
+            referencedColumnNames: id
+            referencedTableName: droply_user
+            validate: true

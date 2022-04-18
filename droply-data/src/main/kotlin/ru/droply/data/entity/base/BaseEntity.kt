@@ -1,11 +1,11 @@
 package ru.droply.data.entity.base
 
+import org.springframework.data.util.ProxyUtils
 import java.io.Serializable
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.MappedSuperclass
-import org.springframework.data.util.ProxyUtils
 
 @MappedSuperclass
 abstract class BaseEntity<T : Serializable> {

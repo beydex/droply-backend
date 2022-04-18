@@ -1,4 +1,4 @@
-package ru.droply.data.mapper
+package ru.droply.mapper
 
 import org.mapstruct.Mapper
 import ru.droply.data.common.auth.Auth

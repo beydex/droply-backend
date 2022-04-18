@@ -15,10 +15,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
 import org.springframework.context.ApplicationEventPublisher
+import ru.droply.middleware.DroplyMiddleware
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.event.UserLogoutEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.ktor.retrieveText
-import ru.droply.sprintor.middleware.DroplyMiddleware
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.ExceptionProcessor
 import ru.droply.sprintor.processor.exception.DroplyException
@@ -83,6 +84,7 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
             logger.debug(e) { "Scene error: $e" }
             exceptionProcessor.process(e, session)
         } catch (undeclared: UndeclaredThrowableException) {
+            logger.debug(undeclared) { "Undeclared (proxy) error: $undeclared" }
             exceptionProcessor.process(undeclared, session)
         }
     }

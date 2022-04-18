@@ -1,21 +1,22 @@
 package ru.droply.scenes.endpoint.test
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import java.time.Instant
-import java.time.temporal.ChronoUnit
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.context.annotation.Profile
 import ru.droply.data.common.auth.Auth
 import ru.droply.data.common.auth.AuthProvider
-import ru.droply.data.mapper.AuthPayloadMapper
+import ru.droply.mapper.AuthPayloadMapper
 import ru.droply.service.DroplyUserService
 import ru.droply.service.JwtService
-import ru.droply.sprintor.event.UserAuthorizeEvent
+import ru.droply.service.extensions.auth
+import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Serializable
 data class LogMeInSceneInDto(val email: String)
@@ -55,7 +56,7 @@ class LogMeInScene : RestScene<Request, Response>(Request.serializer(), Response
             expiresAt = Instant.now().plus(1, ChronoUnit.HOURS)
         )
 
-        eventPublisher.publishEvent(UserAuthorizeEvent(user, this))
+        eventPublisher.publishEvent(UserLoginEvent(user, this))
 
         return Response(
             success = true,

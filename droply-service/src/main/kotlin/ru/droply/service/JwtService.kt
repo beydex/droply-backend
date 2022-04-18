@@ -5,14 +5,14 @@ import com.auth0.jwt.exceptions.JWTVerificationException
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import java.time.Instant
-import java.time.temporal.ChronoUnit
-import java.util.*
 import kotlinx.serialization.json.Json
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import ru.droply.data.common.auth.AuthPayload
 import ru.droply.service.config.DroplyJwtConfig
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.*
 
 @Service
 class JwtService {
@@ -46,5 +46,6 @@ fun asMap(value: Any): Map<String, Any?> {
 
     return mapper.readValue<Map<String, Any>>(
         mapper.writeValueAsString(value),
-        object : TypeReference<Map<String, Any>>() {})
+        object : TypeReference<Map<String, Any>>() {}
+    )
 }

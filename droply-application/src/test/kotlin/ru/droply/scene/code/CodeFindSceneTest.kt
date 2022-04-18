@@ -3,6 +3,7 @@ package ru.droply.scene.code
 import org.junit.jupiter.api.Test
 import ru.droply.scenes.endpoint.code.DroplyCodeFindInDto
 import ru.droply.scenes.endpoint.code.DroplyCodeFindOutDto
+import ru.droply.service.extensions.auth
 import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.DroplyErrorResponse
 import ru.droply.test.DroplyTest

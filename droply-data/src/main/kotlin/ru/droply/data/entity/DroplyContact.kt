@@ -1,13 +1,13 @@
 package ru.droply.data.entity
 
+import org.hibernate.annotations.OnDelete
+import org.hibernate.annotations.OnDeleteAction
+import ru.droply.data.entity.base.BaseEntity
 import java.time.ZonedDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
-import org.hibernate.annotations.OnDelete
-import org.hibernate.annotations.OnDeleteAction
-import ru.droply.data.entity.base.BaseEntity
 
 @Entity
 class DroplyContact(
@@ -23,4 +23,4 @@ class DroplyContact(
 
     @field:Column
     val lastSuccessRequestDate: ZonedDateTime
-): BaseEntity<Long>()
+) : BaseEntity<Long>()

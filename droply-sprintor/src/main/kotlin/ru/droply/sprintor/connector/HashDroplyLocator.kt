@@ -3,23 +3,24 @@ package ru.droply.sprintor.connector
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
-import ru.droply.sprintor.event.UserAuthorizeEvent
+import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.event.UserLogoutEvent
+import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class HashDroplyLocator : DroplyLocator {
-    private val userSessionMap: MutableMap<Long, DefaultWebSocketSession> = mutableMapOf()
+    private val userSessionMap: MutableMap<Long, DefaultWebSocketSession> = ConcurrentHashMap()
 
     override fun lookupUser(id: Long) = userSessionMap[id]
 
     @EventListener
-    fun onUserAuthorized(userAuthorizeEvent: UserAuthorizeEvent) {
-        if (userAuthorizeEvent.user.id in userSessionMap) {
-            throw IllegalStateException("User is already in session map (might be double event fire or sync failure)")
+    fun onUserAuthorized(userLoginEvent: UserLoginEvent) {
+        if (userLoginEvent.user.id == null) {
+            return
         }
 
-        val id = userAuthorizeEvent.user.id ?: return
-        userSessionMap[id] = userAuthorizeEvent.session
+        val id = userLoginEvent.user.id ?: return
+        userSessionMap[id] = userLoginEvent.session
     }
 
     @EventListener
