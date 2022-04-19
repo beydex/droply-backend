@@ -1,10 +1,10 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
-import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.Length
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import ru.droply.data.common.dto.request.DroplyFileDto
 import ru.droply.data.common.dto.request.RequestOutDto
 import ru.droply.data.entity.DroplyRequestConstraints
@@ -20,6 +20,7 @@ import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.exception.DroplyException
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
+import javax.validation.constraints.Size
 
 @Serializable
 data class RequestSendInDto(
@@ -60,6 +61,12 @@ class SendRequestScene :
     @Autowired
     private lateinit var fileMapper: DroplyFileMapper
 
+    @field:Value("\${droply.requestLimits.incoming}")
+    private var incomingLimit: Int = 3
+
+    @field:Value("\${droply.requestLimits.outgoing}")
+    private var outgoingLimit: Int = 3
+
     override fun DefaultWebSocketSession.handle(request: RequestSendInDto): RequestSendOutDto {
         // If both or neither of them are provided
         if (!((request.receiverId != null) xor (request.receiverUrid != null))) {
@@ -77,6 +84,14 @@ class SendRequestScene :
 
         val receiver = userService.findByIdAndFetchIncomingRequests(receiverId)
             ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
+
+        if (sender.outgoingRequests.size >= outgoingLimit) {
+            throw DroplyException(code = DroplyErrorCode.TOO_MANY_REQUESTS)
+        }
+
+        if (receiver.incomingRequests.size >= incomingLimit) {
+            throw DroplyException(code = DroplyErrorCode.TOO_MANY_REQUESTS)
+        }
 
         return RequestSendOutDto(
             success = true,

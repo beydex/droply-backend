@@ -22,6 +22,9 @@ spring:
     change-log: classpath:changelog.yml
 
 droply:
+  requestLimits:
+    incoming: 10
+    outgoing: 10
   security:
     issuer: "Droply"
     keys:
