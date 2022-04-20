@@ -1,11 +1,12 @@
 package ru.droply.sprintor.connector
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.concurrent.ConcurrentHashMap
 import org.springframework.context.event.EventListener
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import ru.droply.sprintor.event.UserLoginEvent
 import ru.droply.sprintor.event.UserLogoutEvent
-import java.util.concurrent.ConcurrentHashMap
 
 @Component
 class HashDroplyLocator : DroplyLocator {
@@ -13,6 +14,7 @@ class HashDroplyLocator : DroplyLocator {
 
     override fun lookupUser(id: Long) = userSessionMap[id]
 
+    @Order(0)
     @EventListener
     fun onUserAuthorized(userLoginEvent: UserLoginEvent) {
         if (userLoginEvent.user.id == null) {
@@ -23,6 +25,7 @@ class HashDroplyLocator : DroplyLocator {
         userSessionMap[id] = userLoginEvent.session
     }
 
+    @Order(0)
     @EventListener
     fun onUserDisconnected(userLogoutEvent: UserLogoutEvent) {
         userSessionMap.remove(userLogoutEvent.user.id)

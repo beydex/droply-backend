@@ -1,5 +1,6 @@
 package ru.droply.data.dao
 
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import ru.droply.data.dao.base.BaseDao
@@ -14,4 +15,14 @@ interface RequestDao : BaseDao<Long, DroplyRequest> {
         """
     )
     fun fetchRequest(@Param("requestId") requestId: Long): DroplyRequest?
+
+    @Modifying
+    @Query(
+        """
+        UPDATE DroplyRequest rq
+        SET rq.active = true 
+        WHERE rq.id = :requestId
+        """
+    )
+    fun setActive(@Param("requestId") requestId: Long)
 }

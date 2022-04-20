@@ -21,7 +21,18 @@ class UserRequestAnswerEventListener {
     @EventListener
     fun listenRequestSend(event: UserRequestAnswerEvent) {
         val requestId = event.request.id ?: return
-        val session = locator.lookupUser(event.request.sender.id!!) ?: return
+        val endUserId =
+            if (event.issuer.id == event.request.sender.id) {
+                event.request.receiver.id
+            } else {
+                event.request.sender.id
+            }
+
+        if (endUserId == null) {
+            return
+        }
+
+        val session = locator.lookupUser(endUserId) ?: return
 
         runBlocking {
             sendUpdate(session, requestId, event.accept, event.answer)

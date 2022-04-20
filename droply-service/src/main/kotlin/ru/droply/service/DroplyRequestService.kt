@@ -42,14 +42,24 @@ class DroplyRequestService {
     }
 
     @Transactional
-    fun removeRequest(droplyRequest: DroplyRequest, accept: Boolean = false, answer: String? = null) {
+    fun removeRequest(
+        droplyRequest: DroplyRequest,
+        issuer: DroplyUser,
+        accept: Boolean = false,
+        answer: String? = null
+    ) {
         val sender = userService.findByIdAndFetchOutgoingRequests(droplyRequest.sender.id!!)!!
         val receiver = userService.findByIdAndFetchIncomingRequests(droplyRequest.receiver.id!!)!!
 
-        applicationEventPublisher.publishEvent(UserRequestAnswerEvent(droplyRequest, accept, answer))
+        applicationEventPublisher.publishEvent(UserRequestAnswerEvent(droplyRequest, issuer, accept, answer))
 
         sender.outgoingRequests.remove(droplyRequest)
         receiver.incomingRequests.remove(droplyRequest)
         requestDao.delete(droplyRequest)
+    }
+
+    @Transactional
+    fun setActive(droplyRequest: DroplyRequest) {
+        requestDao.setActive(droplyRequest.id!!)
     }
 }

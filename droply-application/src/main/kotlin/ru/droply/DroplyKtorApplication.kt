@@ -11,6 +11,7 @@ import io.ktor.websocket.WebSockets
 import io.ktor.websocket.webSocket
 import java.lang.reflect.UndeclaredThrowableException
 import java.time.Duration
+import kotlinx.coroutines.channels.ClosedReceiveChannelException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import mu.KotlinLogging
@@ -55,7 +56,13 @@ fun Application.configureSockets() {
     }
 
     routing {
-        webSocket("/") { serveDroplyWebsocket() }
+        webSocket("/") {
+            try {
+                serveDroplyWebsocket()
+            } catch (e: ClosedReceiveChannelException) {
+                handleClose()
+            }
+        }
     }
 }
 
@@ -81,7 +88,7 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
                 rollout(actualRequest)
             }
         } catch (e: Exception) {
-            logger.debug(e) { "Scene error: $e" }
+            logger.error(e) { "Scene error: $e" }
             exceptionProcessor.process(e, session)
         } catch (undeclared: UndeclaredThrowableException) {
             logger.debug(undeclared) { "Undeclared (proxy) error: $undeclared" }
@@ -89,7 +96,11 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
         }
     }
 
-    // Send an event once we have finished serving an authorized user
+    handleClose()
+}
+
+private fun DefaultWebSocketSession.handleClose() {
+    // Send an event once we have finished serving authorized user
     if (ctx.auth != null) {
         eventPublisher.publishEvent(UserLogoutEvent(ctx.auth!!.user))
     }

@@ -39,7 +39,7 @@ class CancelRequestScene :
             throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
         }
 
-        requestService.removeRequest(droplyRequest, false)
+        requestService.removeRequest(droplyRequest, ctx.storedAuth.user, false)
         return CancelRequestOutDto(success = true)
     }
 }

@@ -22,7 +22,7 @@ class UserLogoutCancelRequestsEventListener {
         val user = userService.findByIdAndFetchOutgoingRequests(userId) ?: return
 
         for (outgoingRequest in user.outgoingRequests) {
-            requestService.removeRequest(outgoingRequest, false)
+            requestService.removeRequest(droplyRequest = outgoingRequest, issuer = user, accept = false)
         }
     }
 }

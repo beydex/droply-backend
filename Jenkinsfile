@@ -1,5 +1,12 @@
+def agentLabel
+if (BRANCH_NAME == "master" || BRANCH_NAME == "test") {
+    agentLabel = "deploy"
+} else {
+    agentLabel = "build"
+}
+
 pipeline {
-    agent any
+    agent { label agentLabel }
 
     environment {
         LANG = 'en_US.UTF-8'

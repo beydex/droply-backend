@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -15,7 +16,6 @@ import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.exception.DroplyException
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
-import javax.validation.constraints.Size
 
 @Serializable
 data class RequestSignalInDto(
@@ -27,7 +27,7 @@ data class RequestSignalInDto(
 @Serializable
 data class RequestSignalOutDto(val success: Boolean)
 
-@DroplyScene("request/answer")
+@DroplyScene("request/signal")
 @AuthRequired
 @ValidationRequired
 class RequestSignalScene :

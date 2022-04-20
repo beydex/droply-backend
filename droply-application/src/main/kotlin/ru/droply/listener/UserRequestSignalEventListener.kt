@@ -43,7 +43,7 @@ class UserRequestSignalEventListener {
 
         val session = locator.lookupUser(receiverId)
         if (session == null) {
-            requestService.removeRequest(event.request, false)
+            requestService.removeRequest(event.request, event.request.sender, false)
             throw DroplyException(
                 code = DroplyErrorCode.INTERNAL_ERROR,
                 message = "Request receiver is offline"
