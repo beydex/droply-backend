@@ -81,8 +81,8 @@ class DroplyUserService {
     fun findByIdAndFetchContacts(id: Long) = userDao.findByIdAndFetchContacts(id)
 
     @Transactional(readOnly = true)
-    fun findByIdAndFetchIncomingRequests(id: Long) = userDao.findByIdAndFetchIncomingRequests(id)
+    fun findFetchIncomingRequests(id: Long) = userDao.findFetchIncomingRequests(id)
 
     @Transactional(readOnly = true)
-    fun findByIdAndFetchOutgoingRequests(id: Long) = userDao.findByIdAndFetchOutgoingRequests(id)
+    fun findFetchOutgoingRequests(id: Long) = userDao.findFetchOutgoingRequests(id)
 }

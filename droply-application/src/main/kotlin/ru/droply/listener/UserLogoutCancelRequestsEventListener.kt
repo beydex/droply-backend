@@ -19,7 +19,7 @@ class UserLogoutCancelRequestsEventListener {
     @EventListener
     fun listenRequestSend(event: UserLogoutEvent) {
         val userId = event.user.id ?: return
-        val user = userService.findByIdAndFetchOutgoingRequests(userId) ?: return
+        val user = userService.findFetchOutgoingRequests(userId) ?: return
 
         for (outgoingRequest in user.outgoingRequests) {
             requestService.removeRequest(droplyRequest = outgoingRequest, issuer = user, accept = false)

@@ -1,6 +1,5 @@
 package ru.droply.service
 
-import java.time.ZonedDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
@@ -11,6 +10,7 @@ import ru.droply.data.entity.DroplyRequest
 import ru.droply.data.entity.DroplyUser
 import ru.droply.sprintor.event.UserRequestAnswerEvent
 import ru.droply.sprintor.event.UserRequestSendEvent
+import java.time.ZonedDateTime
 
 @Service
 class DroplyRequestService {
@@ -48,8 +48,8 @@ class DroplyRequestService {
         accept: Boolean = false,
         answer: String? = null
     ) {
-        val sender = userService.findByIdAndFetchOutgoingRequests(droplyRequest.sender.id!!)!!
-        val receiver = userService.findByIdAndFetchIncomingRequests(droplyRequest.receiver.id!!)!!
+        val sender = userService.findFetchOutgoingRequests(droplyRequest.sender.id!!)!!
+        val receiver = userService.findFetchIncomingRequests(droplyRequest.receiver.id!!)!!
 
         applicationEventPublisher.publishEvent(UserRequestAnswerEvent(droplyRequest, issuer, accept, answer))
 

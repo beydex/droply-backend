@@ -35,11 +35,14 @@ class UserLoginBumpRequestsEventListener {
     @EventListener
     fun listenRequestSend(event: UserLoginEvent) {
         val userId = event.user.id ?: return
-        val user = userService.findByIdAndFetchIncomingRequests(userId) ?: return
+        val user = userService.findFetchIncomingRequests(userId) ?: return
 
         runBlocking {
             user.incomingRequests.forEach { incomingRequest ->
                 val request = requestService.fetchRequest(incomingRequest.id!!) ?: return@forEach
+                if (request.active) {
+                    return@forEach
+                }
 
                 locator
                     .lookupUser(userId)

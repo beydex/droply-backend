@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.Length
 import org.springframework.beans.factory.annotation.Autowired
@@ -20,7 +21,6 @@ import ru.droply.sprintor.processor.DroplyErrorCode
 import ru.droply.sprintor.processor.exception.DroplyException
 import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
-import javax.validation.constraints.Size
 
 @Serializable
 data class RequestSendInDto(
@@ -73,7 +73,7 @@ class SendRequestScene :
             throw DroplyException(code = DroplyErrorCode.BAD_REQUEST)
         }
 
-        val sender = userService.findByIdAndFetchOutgoingRequests(ctx.storedAuth.user.id!!)
+        val sender = userService.findFetchOutgoingRequests(ctx.storedAuth.user.id!!)
             ?: throw DroplyException(code = DroplyErrorCode.UNAUTHORIZED)
 
         var receiverId = request.receiverId
@@ -82,14 +82,14 @@ class SendRequestScene :
                 ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
         }
 
-        val receiver = userService.findByIdAndFetchIncomingRequests(receiverId)
+        val receiver = userService.findFetchIncomingRequests(receiverId)
             ?: throw DroplyException(code = DroplyErrorCode.NOT_FOUND)
 
-        if (sender.outgoingRequests.size >= outgoingLimit) {
+        if (sender.outgoingRequests.filter { !it.active }.size >= outgoingLimit) {
             throw DroplyException(code = DroplyErrorCode.TOO_MANY_REQUESTS)
         }
 
-        if (receiver.incomingRequests.size >= incomingLimit) {
+        if (receiver.incomingRequests.filter { !it.active }.size >= incomingLimit) {
             throw DroplyException(code = DroplyErrorCode.TOO_MANY_REQUESTS)
         }
 

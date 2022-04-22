@@ -29,7 +29,7 @@ interface UserDao : BaseDao<Long, DroplyUser> {
         WHERE u.id = (:id)
         """
     )
-    fun findByIdAndFetchIncomingRequests(@Param("id") id: Long): DroplyUser?
+    fun findFetchIncomingRequests(@Param("id") id: Long): DroplyUser?
 
     @Query(
         """
@@ -39,18 +39,7 @@ interface UserDao : BaseDao<Long, DroplyUser> {
         WHERE u.id = (:id)
         """
     )
-    fun findByIdAndFetchOutgoingRequests(@Param("id") id: Long): DroplyUser?
-
-    @Query(
-        """
-        SELECT DISTINCT u
-        FROM DroplyUser u
-        LEFT JOIN FETCH u.incomingRequests
-        LEFT JOIN FETCH u.outgoingRequests
-        WHERE u.id = (:id)
-        """
-    )
-    fun findByIdAndFetchRequests(@Param("id") id: Long): DroplyUser?
+    fun findFetchOutgoingRequests(@Param("id") id: Long): DroplyUser?
 
     @Modifying
     @Query(
