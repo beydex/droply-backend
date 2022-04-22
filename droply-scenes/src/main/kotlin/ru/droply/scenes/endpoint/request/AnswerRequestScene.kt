@@ -1,9 +1,12 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.time.ZonedDateTime
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
+import ru.droply.data.entity.DroplyContact
+import ru.droply.service.DroplyContactService
 import ru.droply.service.DroplyRequestService
 import ru.droply.service.extensions.storedAuth
 import ru.droply.sprintor.event.UserRequestAnswerEvent
@@ -32,6 +35,9 @@ class AnswerRequestScene :
     private lateinit var requestService: DroplyRequestService
 
     @Autowired
+    private lateinit var contactService: DroplyContactService
+
+    @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
     override fun DefaultWebSocketSession.handle(request: RequestAnswerInDto): RequestAnswerOutDto {
@@ -48,6 +54,20 @@ class AnswerRequestScene :
         if (!request.accept) {
             requestService.removeRequest(droplyRequest, ctx.storedAuth.user, false)
         } else {
+            // Update/add contact
+            val contact = contactService.getContact(droplyRequest.sender, droplyRequest.receiver)
+            if (contact == null) {
+                contactService.save(
+                    DroplyContact(
+                        owner = droplyRequest.sender,
+                        contact = droplyRequest.receiver,
+                        lastSuccessRequestDate = ZonedDateTime.now()
+                    )
+                )
+            } else {
+                contact.lastSuccessRequestDate = ZonedDateTime.now()
+            }
+
             requestService.setActive(droplyRequest)
             eventPublisher.publishEvent(
                 UserRequestAnswerEvent(

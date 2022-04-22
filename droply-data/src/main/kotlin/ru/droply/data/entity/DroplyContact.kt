@@ -22,5 +22,5 @@ class DroplyContact(
     val contact: DroplyUser,
 
     @field:Column
-    val lastSuccessRequestDate: ZonedDateTime
+    var lastSuccessRequestDate: ZonedDateTime
 ) : BaseEntity<Long>()
