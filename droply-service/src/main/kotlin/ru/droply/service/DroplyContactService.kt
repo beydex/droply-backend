@@ -1,5 +1,6 @@
 package ru.droply.service
 
+import java.time.ZonedDateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -23,4 +24,20 @@ class DroplyContactService {
 
     @Transactional(readOnly = true)
     fun getContact(source: DroplyUser, target: DroplyUser) = contactDao.getContact(source.id!!, target.id!!)
+
+    @Transactional
+    fun createOrUpdateContact(source: DroplyUser, target: DroplyUser) {
+        val contact = contactDao.getContact(source.id!!, target.id!!)
+        if (contact == null) {
+            contactDao.save(
+                DroplyContact(
+                    owner = source,
+                    contact = target,
+                    lastSuccessRequestDate = ZonedDateTime.now()
+                )
+            )
+        } else {
+            contact.lastSuccessRequestDate = ZonedDateTime.now()
+        }
+    }
 }
