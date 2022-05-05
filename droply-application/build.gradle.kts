@@ -205,6 +205,10 @@ jib {
             }
         }
     }
+
+    container {
+        workingDirectory = "/app"
+    }
 }
 
 tasks.test {
