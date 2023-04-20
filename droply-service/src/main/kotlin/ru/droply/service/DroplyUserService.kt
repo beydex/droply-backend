@@ -16,8 +16,15 @@ class DroplyUserService {
     private lateinit var userDao: UserDao
 
     @Transactional
-    fun makeUser(name: String, email: String, avatarUrl: String? = null): DroplyUser =
-        userDao.save(DroplyUser(name, email, avatarUrl))
+    fun makeUser(name: String, email: String, avatarUrl: String? = null, passwordHash: String? = null): DroplyUser =
+        userDao.save(
+            DroplyUser(
+                name = name,
+                email = email,
+                avatarUrl = avatarUrl,
+                passwordHash = passwordHash
+            )
+        )
 
     @Transactional
     fun save(user: DroplyUser): DroplyUser = userDao.save(user)
