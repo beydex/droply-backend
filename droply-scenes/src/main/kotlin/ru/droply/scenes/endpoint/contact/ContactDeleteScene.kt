@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.contact
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.mapper.DroplyContactMapper
@@ -32,7 +33,7 @@ class ContactDeleteScene : RestScene<ContactDeleteInDto, ContactListOutDto>(
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: ContactDeleteInDto): ContactListOutDto {
+    override fun DefaultWebSocketSession.handle(request: ContactDeleteInDto, nonce: UUID): ContactListOutDto {
         val user = userService.findByIdAndFetchContacts(ctx.auth!!.user.id!!)
             ?: throw DroplyException(code = DroplyErrorCode.UNAUTHORIZED)
 

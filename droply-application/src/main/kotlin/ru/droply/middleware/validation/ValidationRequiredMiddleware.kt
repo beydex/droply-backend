@@ -1,6 +1,7 @@
 package ru.droply.middleware.validation
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.droply.middleware.AnnotationMiddleware
@@ -14,7 +15,12 @@ class ValidationRequiredMiddleware : AnnotationMiddleware(ValidationRequired::cl
     @Autowired
     private lateinit var validator: Validator
 
-    override fun <T : Any> handleBeforeForward(scene: Scene<T>, request: T, session: DefaultWebSocketSession) {
+    override fun <T : Any> handleBeforeForward(
+        scene: Scene<T>,
+        request: T,
+        nonce: UUID,
+        session: DefaultWebSocketSession
+    ) {
         // Do validation
         val violations = validator.validate(request)
         if (violations.isNotEmpty()) {

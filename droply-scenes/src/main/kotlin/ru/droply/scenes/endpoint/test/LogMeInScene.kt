@@ -17,6 +17,7 @@ import ru.droply.sprintor.scene.annotation.DroplyScene
 import ru.droply.sprintor.scene.variety.RestScene
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.UUID
 
 @Serializable
 data class LogMeInSceneInDto(val email: String)
@@ -42,7 +43,7 @@ class LogMeInScene : RestScene<Request, Response>(Request.serializer(), Response
     @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
-    override fun DefaultWebSocketSession.handle(request: Request): Response {
+    override fun DefaultWebSocketSession.handle(request: Request, nonce: UUID): Response {
         val user = userService.findByEmail(request.email) ?: userService.makeUser(
             name = request.email.split("@")[0],
             email = request.email

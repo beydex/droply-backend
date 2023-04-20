@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.code
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.dto.user.DroplyUserGeneralOutDto
@@ -28,7 +29,7 @@ class CodeFindScene : RestScene<DroplyCodeFindInDto, DroplyCodeFindOutDto>(
     @Autowired
     private lateinit var userMapper: DroplyUserMapper
 
-    override fun DefaultWebSocketSession.handle(request: DroplyCodeFindInDto): DroplyCodeFindOutDto {
+    override fun DefaultWebSocketSession.handle(request: DroplyCodeFindInDto, nonce: UUID): DroplyCodeFindOutDto {
         val user = userService.findByUrid(request.code)
             ?: throw DroplyException(DroplyErrorCode.NOT_FOUND)
 

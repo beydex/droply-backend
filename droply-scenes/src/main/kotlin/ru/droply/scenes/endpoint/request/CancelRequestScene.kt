@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.service.DroplyRequestService
@@ -32,7 +33,7 @@ class CancelRequestScene :
     @Autowired
     private lateinit var requestService: DroplyRequestService
 
-    override fun DefaultWebSocketSession.handle(request: CancelRequestInDto): CancelRequestOutDto {
+    override fun DefaultWebSocketSession.handle(request: CancelRequestInDto, nonce: UUID): CancelRequestOutDto {
         val droplyRequest = requestService.findRequest(request.requestId)
         val userId = ctx.storedAuth.user.id
         if (droplyRequest == null || (userId != droplyRequest.sender.id && userId != droplyRequest.receiver.id)) {

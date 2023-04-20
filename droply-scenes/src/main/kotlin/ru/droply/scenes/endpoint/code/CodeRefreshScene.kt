@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.code
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.service.DroplyUserService
@@ -18,7 +19,7 @@ class CodeRefreshScene : OutRestScene<DroplyCodeOutDto>(DroplyCodeOutDto.seriali
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: Unit) = DroplyCodeOutDto(
+    override fun DefaultWebSocketSession.handle(request: Unit, nonce: UUID): DroplyCodeOutDto = DroplyCodeOutDto(
         success = true,
         code = userService.updateUserUrid(userService.requireUser(ctx))
     )

@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.test
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
@@ -31,7 +32,7 @@ class LocateUserScene :
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: LocateUserInDto): LocateUserOutDto {
+    override fun DefaultWebSocketSession.handle(request: LocateUserInDto, nonce: UUID): LocateUserOutDto {
         val located = locator.lookupUser(request.id)
 
         return LocateUserOutDto(

@@ -1,6 +1,7 @@
 package ru.droply.middleware.security
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import ru.droply.data.common.auth.Auth
@@ -18,7 +19,12 @@ class AuthRequiredMiddleware : AnnotationMiddleware(AuthRequired::class) {
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun <T : Any> handleBeforeForward(scene: Scene<T>, request: T, session: DefaultWebSocketSession) {
+    override fun <T : Any> handleBeforeForward(
+        scene: Scene<T>,
+        request: T,
+        nonce: UUID,
+        session: DefaultWebSocketSession
+    ) {
         if (session.ctx.auth == null) {
             throw DroplyException(code = DroplyErrorCode.UNAUTHORIZED)
         }

@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.Length
@@ -67,7 +68,7 @@ class SendRequestScene :
     @field:Value("\${droply.requestLimits.outgoing}")
     private var outgoingLimit: Int = 3
 
-    override fun DefaultWebSocketSession.handle(request: RequestSendInDto): RequestSendOutDto {
+    override fun DefaultWebSocketSession.handle(request: RequestSendInDto, nonce: UUID): RequestSendOutDto {
         // If both or neither of them are provided
         if (!((request.receiverId != null) xor (request.receiverUrid != null))) {
             throw DroplyException(code = DroplyErrorCode.BAD_REQUEST)

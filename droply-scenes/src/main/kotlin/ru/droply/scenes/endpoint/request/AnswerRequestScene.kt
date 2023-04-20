@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -38,7 +39,7 @@ class AnswerRequestScene :
     @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
-    override fun DefaultWebSocketSession.handle(request: RequestAnswerInDto): RequestAnswerOutDto {
+    override fun DefaultWebSocketSession.handle(request: RequestAnswerInDto, nonce: UUID): RequestAnswerOutDto {
         // Allow either both accept and answer or neither of them
         if (!(request.accept xor (request.answer == null))) {
             throw DroplyException(code = DroplyErrorCode.BAD_REQUEST)

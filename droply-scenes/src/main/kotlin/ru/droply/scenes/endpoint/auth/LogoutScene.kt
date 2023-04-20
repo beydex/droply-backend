@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.auth
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -20,7 +21,7 @@ class LogoutScene : OutRestScene<LogoutSceneOutDto>(LogoutSceneOutDto.serializer
     @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
-    override fun DefaultWebSocketSession.handle(request: Unit): LogoutSceneOutDto {
+    override fun DefaultWebSocketSession.handle(request: Unit, nonce: UUID): LogoutSceneOutDto {
         try {
             eventPublisher.publishEvent(UserLogoutEvent(ctx.auth!!.user))
         } finally {

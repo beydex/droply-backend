@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.auth
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.auth.Auth
@@ -41,7 +42,7 @@ class WhoamiScene : OutRestScene<WhoamiOutDto>(WhoamiOutDto.serializer()) {
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: Unit): WhoamiOutDto {
+    override fun DefaultWebSocketSession.handle(request: Unit, nonce: UUID): WhoamiOutDto {
         return WhoamiOutDto.Authorized(
             auth = ctx.auth!!,
             user = userService.requireUser(ctx)
