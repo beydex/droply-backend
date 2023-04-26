@@ -14,6 +14,7 @@ import ru.droply.service.DroplyRequestService
 import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.connector.DroplyLocator
 import ru.droply.sprintor.event.UserLoginEvent
+import ru.droply.sprintor.event.isExternal
 import ru.droply.sprintor.ktor.sendJson
 
 @Component
@@ -34,6 +35,13 @@ class UserLoginBumpRequestsEventListener {
     @Order(2)
     @EventListener
     fun listenRequestSend(event: UserLoginEvent) {
+        if (event.isExternal()) {
+            // Instance emitting the event handles
+            // all the notifications about incoming requests
+            // on its own
+            return
+        }
+
         val userId = event.user.id ?: return
         val user = userService.findFetchIncomingRequests(userId) ?: return
 

@@ -28,6 +28,9 @@ dependencies {
     implementation("io.ktor:ktor-websockets:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
 
+    // Redisson
+    implementation("org.redisson:redisson:3.13.1")
+
     // Validation
     implementation("org.springframework.boot:spring-boot-starter-validation")
 }
