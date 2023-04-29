@@ -7,6 +7,7 @@ import kotlinx.serialization.Serializable
 import org.hibernate.validator.constraints.Length
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.ApplicationEventPublisher
 import ru.droply.data.common.dto.request.DroplyFileDto
 import ru.droply.data.common.dto.request.RequestOutDto
 import ru.droply.data.entity.DroplyRequestConstraints
@@ -15,6 +16,7 @@ import ru.droply.mapper.DroplyRequestMapper
 import ru.droply.service.DroplyRequestService
 import ru.droply.service.DroplyUserService
 import ru.droply.service.extensions.storedAuth
+import ru.droply.sprintor.event.UserRequestSendEvent
 import ru.droply.sprintor.ktor.ctx
 import ru.droply.sprintor.middleware.security.AuthRequired
 import ru.droply.sprintor.middleware.validation.ValidationRequired
@@ -68,6 +70,9 @@ class SendRequestScene :
     @field:Value("\${droply.requestLimits.outgoing}")
     private var outgoingLimit: Int = 3
 
+    @Autowired
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
     override fun DefaultWebSocketSession.handle(request: RequestSendInDto, nonce: UUID): RequestSendOutDto {
         // If both or neither of them are provided
         if (!((request.receiverId != null) xor (request.receiverUrid != null))) {
@@ -94,16 +99,18 @@ class SendRequestScene :
             throw DroplyException(code = DroplyErrorCode.TOO_MANY_REQUESTS)
         }
 
-        return RequestSendOutDto(
-            success = true,
-            request = requestMapper.map(
-                requestService.sendRequest(
-                    sender,
-                    receiver,
-                    request.offer,
-                    fileMapper.map(request.files)
-                )
-            )
+        val requestEntity = requestService.sendRequest(
+            sender,
+            receiver,
+            request.offer,
+            fileMapper.map(request.files)
         )
+        val outDto = RequestSendOutDto(
+            success = true,
+            request = requestMapper.map(requestEntity)
+        )
+
+        applicationEventPublisher.publishEvent(UserRequestSendEvent(requestEntity))
+        return outDto
     }
 }

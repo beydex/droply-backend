@@ -29,24 +29,43 @@ fun UserRequestAnswerEvent.toMessage() = UserRequestAnswerMessage(request.id!!, 
 fun UserRequestSignalEvent.toMessage() = RequestSignalMessage(request.id!!, sender.id!!, content)
 
 fun UserLoginMessage.toEvent() =
-    droplyLocator.lookupUser(userId)?.let { UserLoginEvent(droplyUserService.findById(userId)!!, it) }
+    droplyLocator.lookupUser(userId)
+        ?.let {
+            droplyUserService
+                .findById(userId)
+                ?.let { user -> UserLoginEvent(user, it) }
+        }
 
 fun UserLogoutMessage.toEvent() =
-    UserLogoutEvent(droplyUserService.findById(userId)!!)
+    droplyUserService.findById(userId)?.let { UserLogoutEvent(it) }
 
-fun RequestSendMessage.toEvent() = UserRequestSendEvent(droplyRequestService.fetchRequest(requestId)!!)
-fun RequestSignalMessage.toEvent() = UserRequestSignalEvent(
-    droplyRequestService.findRequest(requestId)!!,
-    droplyUserService.findById(senderId)!!,
-    content
-)
+fun RequestSendMessage.toEvent() = droplyRequestService.fetchRequest(requestId)?.let { UserRequestSendEvent(it) }
+fun RequestSignalMessage.toEvent(): UserRequestSignalEvent? {
+    val request = droplyRequestService.findRequest(requestId)
+    val user = droplyUserService.findById(senderId)
+    if (request == null || user == null) {
+        return null
+    }
+    return UserRequestSignalEvent(
+        request,
+        user,
+        content
+    )
+}
 
-fun UserRequestAnswerMessage.toEvent() = UserRequestAnswerEvent(
-    droplyRequestService.fetchRequest(requestId)!!,
-    droplyUserService.findById(issuerId)!!,
-    accept,
-    answer
-)
+fun UserRequestAnswerMessage.toEvent(): UserRequestAnswerEvent? {
+    val request = droplyRequestService.fetchRequest(requestId)
+    val user = droplyUserService.findById(issuerId)
+    if (request == null || user == null) {
+        return null
+    }
+    return UserRequestAnswerEvent(
+        request,
+        user,
+        accept,
+        answer
+    )
+}
 
 fun DroplyEvent.toMessage() = when (this) {
     is UserLoginEvent -> toMessage()
