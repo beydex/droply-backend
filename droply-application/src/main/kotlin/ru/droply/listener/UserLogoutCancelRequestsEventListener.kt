@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component
 import ru.droply.service.DroplyRequestService
 import ru.droply.service.DroplyUserService
 import ru.droply.sprintor.event.UserLogoutEvent
+import ru.droply.sprintor.event.isExternal
 
 @Component
 class UserLogoutCancelRequestsEventListener {
@@ -18,6 +19,12 @@ class UserLogoutCancelRequestsEventListener {
 
     @EventListener
     fun listenRequestSend(event: UserLogoutEvent) {
+        if (event.isExternal()) {
+            // The instance emitting the event
+            // should handle request removal on its own
+            return
+        }
+
         val userId = event.user.id ?: return
         val user = userService.findFetchOutgoingRequests(userId) ?: return
 

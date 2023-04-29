@@ -36,6 +36,10 @@ droply:
   auth:
     google:
       clientId: "560884241902-p1atlsdr1i1sc79icipgbled726ek470.apps.googleusercontent.com"
+  bus:
+    redis:
+      url: "redis://localhost:6379"
+      topic: "events"
 
 logging:
   level:

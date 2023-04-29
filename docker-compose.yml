@@ -1,0 +1,47 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:13.4
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  main:
+    image: theseems/droply-backend
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/droply
+      - DROPLY_BUS_REDIS_URL=redis://redis:6379
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    volumes:
+      - ./keys:/keys
+    depends_on:
+      - postgres
+      - redis
+  secondary:
+    image: theseems/droply-backend
+    ports:
+      - "8082:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/droply
+      - DROPLY_BUS_REDIS_URL=redis://redis:6379
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    volumes:
+      - ./keys:/keys
+    depends_on:
+      - postgres
+      - redis

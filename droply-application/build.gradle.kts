@@ -71,6 +71,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("org.postgresql:postgresql")
 
+    // Redisson
+    implementation("org.redisson:redisson:3.13.1")
+
     // Test stuff
     testImplementation("org.mockito.kotlin:mockito-kotlin:$mockitoKotlinVersion")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
