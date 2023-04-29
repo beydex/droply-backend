@@ -34,10 +34,8 @@ class SpringEventBusForwardListener {
         eventBus.subscribe {
             // These are the only events we care about
             if (!it.isApplicable()) {
-                println("$it is UNAPPLICABLE, SKIPPING")
                 return@subscribe
             }
-            println("Converting $it to EVENT: #${it.toEvent(external = true)}")
             it.toEvent(external = true)?.let { event ->
                 // Forward specific received events (if possible)
                 // to Spring event publisher
