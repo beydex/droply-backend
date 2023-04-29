@@ -2,6 +2,7 @@ package ru.droply.scenes.endpoint.auth.sign
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
 import java.security.MessageDigest
+import java.util.UUID
 import javax.validation.constraints.Email
 import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
@@ -64,7 +65,7 @@ class SignScene : RestScene<Request, Response>(Request.serializer(), Response.se
     private lateinit var authPayloadMapper: AuthPayloadMapper
 
 
-    override fun DefaultWebSocketSession.handle(request: Request): Response {
+    override fun DefaultWebSocketSession.handle(request: Request, nonce: UUID): Response {
         if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in")
         }

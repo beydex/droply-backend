@@ -33,11 +33,8 @@ class DroplyRequestService {
     @Transactional
     fun sendRequest(sender: DroplyUser, receiver: DroplyUser, offer: String, files: Set<DroplyFile>): DroplyRequest {
         val request = requestDao.save(DroplyRequest(sender, receiver, ZonedDateTime.now(), offer, files))
-
-        applicationEventPublisher.publishEvent(UserRequestSendEvent(request))
         sender.outgoingRequests.add(request)
         receiver.incomingRequests.add(request)
-
         return request
     }
 
