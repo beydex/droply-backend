@@ -5,6 +5,7 @@ import io.ktor.http.cio.websocket.Frame
 import io.ktor.server.testing.TestApplicationCall
 import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.withTestApplication
+import java.util.UUID
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.serialization.json.Json
@@ -45,7 +46,7 @@ fun socketIncoming(
 }
 
 fun makeRequest(path: String, vararg entries: Pair<String, JsonElement>): SceneRequest =
-    SceneRequest(path, JsonObject(mapOf(*entries)))
+    SceneRequest(path, JsonObject(mapOf(*entries)), UUID.randomUUID())
 
 inline fun <reified T> makeRequest(path: String, data: T): SceneRequest =
-    SceneRequest(path, Json.encodeToJsonElement(data).jsonObject)
+    SceneRequest(path, Json.encodeToJsonElement(data).jsonObject, UUID.randomUUID())

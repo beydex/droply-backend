@@ -81,11 +81,11 @@ private suspend fun DefaultWebSocketSession.serveDroplyWebsocket() {
                 val actualRequest = Json.decodeFromString(serializer, requestContent.toString())
                 for (droplyMiddleware in middlewareCollection) {
                     // Process before forward middleware scenarios
-                    droplyMiddleware.beforeForward(scene, actualRequest, session)
+                    droplyMiddleware.beforeForward(scene, actualRequest, sceneRequest.nonce, session)
                 }
 
                 // Rollout actual scene
-                rollout(actualRequest)
+                rollout(actualRequest, sceneRequest.nonce)
             }
         } catch (e: Exception) {
             logger.error(e) { "Scene error: $e" }

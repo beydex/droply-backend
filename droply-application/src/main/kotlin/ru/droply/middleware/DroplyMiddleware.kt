@@ -1,6 +1,7 @@
 package ru.droply.middleware
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import ru.droply.sprintor.scene.Scene
 
 interface DroplyMiddleware {
@@ -11,5 +12,5 @@ interface DroplyMiddleware {
      * @param request serialized user request
      * @param session user websocket session
      */
-    fun <T : Any> beforeForward(scene: Scene<T>, request: T, session: DefaultWebSocketSession)
+    fun <T : Any> beforeForward(scene: Scene<T>, request: T, nonce: UUID, session: DefaultWebSocketSession)
 }

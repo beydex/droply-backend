@@ -9,6 +9,14 @@ import javax.persistence.OneToMany
 import javax.persistence.PrimaryKeyJoinColumn
 import javax.persistence.SecondaryTable
 
+object DroplyUserConstraints {
+    const val MAX_PASSWORD_HASH = 1024
+
+    const val MIN_PASSWORD_LENGTH = 6
+    const val MAX_PASSWORD_LENGTH = 20
+}
+
+
 @Entity
 @SecondaryTable(
     name = "droply_user_id_urid",
@@ -47,5 +55,8 @@ class DroplyUser(
         mappedBy = "sender"
     )
     val outgoingRequests: MutableSet<DroplyRequest> = mutableSetOf(),
+
+    @field:Column(length = DroplyUserConstraints.MAX_PASSWORD_HASH)
+    var passwordHash: String? = null
 
 ) : BaseEntity<Long>()

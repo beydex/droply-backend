@@ -19,7 +19,7 @@ suspend inline fun <reified T> SendChannel<Frame>.sendJson(value: T) {
     send(Frame.Text(json.encodeToString(value)))
 }
 
-suspend inline fun <T> SendChannel<Frame>.sendJson(value: T, serializer: KSerializer<T>) {
+suspend inline fun <T : Any> SendChannel<Frame>.sendJson(value: T, serializer: KSerializer<Any>) {
     send(Frame.Text(json.encodeToString(serializer, value)))
 }
 

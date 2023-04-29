@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.request
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import javax.validation.constraints.Size
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
@@ -42,7 +43,7 @@ class RequestSignalScene :
     @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
-    override fun DefaultWebSocketSession.handle(request: RequestSignalInDto): RequestSignalOutDto {
+    override fun DefaultWebSocketSession.handle(request: RequestSignalInDto, nonce: UUID): RequestSignalOutDto {
         val droplyRequest = requestService.findRequest(request.requestId)
         val userId = ctx.storedAuth.user.id
 

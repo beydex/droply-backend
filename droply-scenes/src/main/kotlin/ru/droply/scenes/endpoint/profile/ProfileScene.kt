@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.profile
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.dto.user.DroplyUserOutDto
@@ -20,7 +21,7 @@ class ProfileScene : OutRestScene<ProfileOutDto>(ProfileOutDto.serializer()) {
     @Autowired
     private lateinit var userMapper: DroplyUserMapper
 
-    override fun DefaultWebSocketSession.handle(request: Unit): ProfileOutDto = ProfileOutDto(
+    override fun DefaultWebSocketSession.handle(request: Unit, nonce: UUID): ProfileOutDto = ProfileOutDto(
         success = true,
         user = userMapper.map(ctx.auth!!.user),
     )

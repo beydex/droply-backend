@@ -1,6 +1,7 @@
 package ru.droply.scenes.endpoint.contact
 
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import ru.droply.data.common.dto.contact.ContactEntryOutDto
@@ -24,7 +25,7 @@ class GetContactListScene : OutRestScene<ContactListOutDto>(ContactListOutDto.se
     @Autowired
     private lateinit var userService: DroplyUserService
 
-    override fun DefaultWebSocketSession.handle(request: Unit): ContactListOutDto {
+    override fun DefaultWebSocketSession.handle(request: Unit, nonce: UUID): ContactListOutDto {
         val entries = userService.findByIdAndFetchContacts(ctx.auth!!.user.id!!)!!
             .contacts
             .map(contactMapper::map)

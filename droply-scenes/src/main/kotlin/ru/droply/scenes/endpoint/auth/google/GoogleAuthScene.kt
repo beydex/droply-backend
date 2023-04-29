@@ -3,6 +3,7 @@ package ru.droply.scenes.endpoint.auth.google
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import io.ktor.http.cio.websocket.DefaultWebSocketSession
+import java.util.UUID
 import kotlinx.serialization.Serializable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -57,7 +58,7 @@ class GoogleAuthScene : RestScene<Request, Response>(Request.serializer(), Respo
     @Autowired
     private lateinit var eventPublisher: ApplicationEventPublisher
 
-    override fun DefaultWebSocketSession.handle(request: Request): Response {
+    override fun DefaultWebSocketSession.handle(request: Request, nonce: UUID): Response {
         if (ctx.auth != null && userService.fetchUser(ctx) != null) {
             return Failure("You are already logged in, ${ctx.auth!!.user.name}")
         }

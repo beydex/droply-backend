@@ -9,21 +9,15 @@ import ru.droply.data.common.dto.request.RequestSignalDto
 import ru.droply.data.entity.DroplyRequest
 import ru.droply.dto.update.DroplyUpdateOutDto
 import ru.droply.dto.update.DroplyUpdateType
-import ru.droply.service.DroplyRequestService
 import ru.droply.sprintor.connector.DroplyLocator
 import ru.droply.sprintor.event.UserRequestSignalEvent
 import ru.droply.sprintor.ktor.sendJson
-import ru.droply.sprintor.processor.DroplyErrorCode
-import ru.droply.sprintor.processor.exception.DroplyException
 
 @Component
 class UserRequestSignalEventListener {
 
     @Autowired
     private lateinit var locator: DroplyLocator
-
-    @Autowired
-    private lateinit var requestService: DroplyRequestService
 
     @EventListener
     fun listenRequestSend(event: UserRequestSignalEvent) {
@@ -42,13 +36,13 @@ class UserRequestSignalEventListener {
         }
 
         val session = locator.lookupUser(receiverId)
-        if (session == null) {
-            requestService.removeRequest(event.request, event.request.sender, false)
-            throw DroplyException(
-                code = DroplyErrorCode.INTERNAL_ERROR,
-                message = "Request receiver is offline"
-            )
-        }
+            ?: // Cease to proceed with this request.
+            // In reality, we are unsure whether the user is connected to a particular instance or not,
+            // so we cannot assume that they are not.
+            // Therefore, the request will remain in the database
+            // until we add functionality to check whether the user is connected
+            // to any instance of the application
+            return
 
         runBlocking { sendUpdate(session, event.request, event.content) }
     }
