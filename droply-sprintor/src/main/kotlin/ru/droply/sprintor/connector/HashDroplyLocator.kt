@@ -28,6 +28,8 @@ class HashDroplyLocator : DroplyLocator {
     @Order(0)
     @EventListener
     fun onUserDisconnected(userLogoutEvent: UserLogoutEvent) {
-        userSessionMap.remove(userLogoutEvent.user.id)
+        userLogoutEvent.user.id
+            // Null check: in case we're trying to remove virtual user
+            ?.let { userSessionMap.remove(it) }
     }
 }
